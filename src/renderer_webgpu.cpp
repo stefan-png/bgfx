@@ -533,11 +533,11 @@ namespace bgfx { namespace webgpu
 
 				if (s_ignoreError)
 				{
-					BX_TRACE("Device error: %s", message);
+					BX_TRACE("Device error: {}", message);
 				}
 				else
 				{
-					BX_ASSERT(false, "Device error: %s", message);
+					BX_ASSERT(false, "Device error: {}", message);
 				}
 
 				s_ignoreError = false;
@@ -573,7 +573,7 @@ namespace bgfx { namespace webgpu
 
 			for (uint8_t ii = 0; ii < BGFX_CONFIG_MAX_FRAME_LATENCY; ++ii)
 			{
-				BX_TRACE("Create scratch buffer %d", ii);
+				BX_TRACE("Create scratch buffer {:d}", ii);
 				m_scratchBuffers[ii].create(BGFX_CONFIG_MAX_DRAW_CALLS * 128);
 				m_bindStateCache[ii].create(); // (1024);
 			}
@@ -855,7 +855,7 @@ namespace bgfx { namespace webgpu
 			if (readback.m_mapped)
 				return;
 
-			BX_ASSERT(readback.m_mip<texture.m_numMips,"Invalid mip: %d num mips:", readback.m_mip,texture.m_numMips);
+			BX_ASSERT(readback.m_mip<texture.m_numMips,"Invalid mip: {:d} num mips:", readback.m_mip,texture.m_numMips);
 
 			uint32_t srcWidth  = bx::uint32_max(1, texture.m_width  >> readback.m_mip);
 			uint32_t srcHeight = bx::uint32_max(1, texture.m_height >> readback.m_mip);
@@ -1088,7 +1088,7 @@ namespace bgfx { namespace webgpu
 				break;
 
 			default:
-				BX_ASSERT(false, "Invalid handle type?! %d", _handle.type);
+				BX_ASSERT(false, "Invalid handle type?! {:d}", _handle.type);
 				break;
 			}
 		}
@@ -1532,7 +1532,7 @@ namespace bgfx { namespace webgpu
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("%4d: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 			}
@@ -2004,7 +2004,7 @@ namespace bgfx { namespace webgpu
 				layout.bindGroupLayouts = &program.m_bindGroupLayout;
 				layout.bindGroupLayoutCount = 1;
 
-				BX_TRACE("Creating WebGPU render pipeline layout for program %s", program.m_vsh->name());
+				BX_TRACE("Creating WebGPU render pipeline layout for program {}", program.m_vsh->name());
 				pd.desc.layout = m_device.CreatePipelineLayout(&layout);
 				// TODO (hugoam) this should be cached too ?
 
@@ -2154,7 +2154,7 @@ namespace bgfx { namespace webgpu
 
 				pd.desc.vertex = vertex.desc;
 
-				BX_TRACE("Creating WebGPU render pipeline state for program %s", program.m_vsh->name());
+				BX_TRACE("Creating WebGPU render pipeline state for program {}", program.m_vsh->name());
 				pso->m_rps = m_device.CreateRenderPipeline2(&pd.desc);
 
 				m_pipelineStateCache.add(hash, pso);
@@ -2201,14 +2201,14 @@ namespace bgfx { namespace webgpu
 				layout.bindGroupLayouts = &program.m_bindGroupLayout;
 				layout.bindGroupLayoutCount = 1;
 
-				BX_TRACE("Creating WebGPU render pipeline layout for program %s", program.m_vsh->name());
+				BX_TRACE("Creating WebGPU render pipeline layout for program {}", program.m_vsh->name());
 				pso->m_layout = m_device.CreatePipelineLayout(&layout);
 
 				wgpu::ComputePipelineDescriptor desc;
 				desc.layout = pso->m_layout;
 				desc.computeStage = { NULL, program.m_vsh->m_module, "main" };
 
-				BX_TRACE("Creating WebGPU render pipeline state for program %s", program.m_vsh->name());
+				BX_TRACE("Creating WebGPU render pipeline state for program {}", program.m_vsh->name());
 				pso->m_cps = m_device.CreateComputePipeline(&desc);
 			}
 
@@ -2467,7 +2467,7 @@ namespace bgfx { namespace webgpu
 	{
 		m_handle = _handle;
 
-		BX_TRACE("Creating shader %s", getName(_handle));
+		BX_TRACE("Creating shader {}", getName(_handle));
 
 		bx::MemoryReader reader(_mem->data, _mem->size);
 
@@ -2517,7 +2517,7 @@ namespace bgfx { namespace webgpu
 		m_numPredefined = 0;
 		m_numUniforms = count;
 
-		BX_TRACE("%s Shader consts %d"
+		BX_TRACE("{} Shader consts {:d}"
 			, getShaderTypeName(magic)
 			, count
 			);
@@ -2609,7 +2609,7 @@ namespace bgfx { namespace webgpu
 				else if (UniformType::Sampler == (~kUniformMask & type))
 				{
 					const UniformRegInfo* info = s_renderWgpu->m_uniformReg.find(name);
-					BX_ASSERT(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+					BX_ASSERT(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 					const uint8_t reverseShift = kSpirvBindShift;
 					const uint8_t stage = regIndex - reverseShift;
@@ -2666,7 +2666,7 @@ namespace bgfx { namespace webgpu
 				else
 				{
 					const UniformRegInfo* info = s_renderWgpu->m_uniformReg.find(name);
-					BX_ASSERT(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+					BX_ASSERT(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 					if(NULL == m_constantBuffer)
 					{
@@ -2677,7 +2677,7 @@ namespace bgfx { namespace webgpu
 					m_constantBuffer->writeUniformHandle((UniformType::Enum)(type | fragmentBit), regIndex, info->m_handle, regCount);
 				}
 
-				BX_TRACE("\t%s: %s (%s), r.index %3d, r.count %2d, r.texComponent %1d, r.texDimension %1d"
+				BX_TRACE("\t{}: {} ({}), r.index {:3d}, r.count {:2d}, r.texComponent {:1d}, r.texDimension {:1d}"
 					, kind
 					, name
 					, getUniformTypeName(UniformType::Enum(type&~kUniformMask) )
@@ -2753,7 +2753,7 @@ namespace bgfx { namespace webgpu
 			{
 				m_attrMask[attr] = UINT16_MAX;
 				m_attrRemap[attr] = ii;
-				BX_TRACE("\tattrib: %s (%i) at index %i", toString(attr), attr, ii);
+				BX_TRACE("\tattrib: {} (%i) at index %i", toString(attr), attr, ii);
 			}
 		}
 
@@ -2769,7 +2769,7 @@ namespace bgfx { namespace webgpu
 
 		BGFX_FATAL(m_module
 			, bgfx::Fatal::InvalidShader
-			, "Failed to create %s shader."
+			, "Failed to create {} shader."
 			, getShaderTypeName(magic)
 			);
 
@@ -2792,7 +2792,7 @@ namespace bgfx { namespace webgpu
 		const uint32_t align = kMinBufferOffsetAlignment;
 		m_gpuSize = uint16_t(bx::strideAlign(m_size, align) );
 
-		BX_TRACE("shader size %d (used=%d) (prev=%d)", (int)m_size, (int)m_gpuSize, (int)bx::strideAlign(roundUp(m_size, 4), align));
+		BX_TRACE("shader size {:d} (used={:d}) (prev={:d})", (int)m_size, (int)m_gpuSize, (int)bx::strideAlign(roundUp(m_size, 4), align));
 	}
 
 	void ProgramWgpu::create(const ShaderWgpu* _vsh, const ShaderWgpu* _fsh)
@@ -3110,7 +3110,7 @@ namespace bgfx { namespace webgpu
 			const bool renderTarget = 0 != (_flags&BGFX_TEXTURE_RT_MASK);
 			const bool srgb         = 0 != (_flags&BGFX_TEXTURE_SRGB);
 
-			BX_TRACE("Texture %3d: %s (requested: %s), layers %d, %dx%d%s RT[%c], WO[%c], CW[%c], sRGB[%c]"
+			BX_TRACE("Texture {:3d}: {} (requested: {}), layers {:d}, %dx{:d}{} RT[{:c}], WO[{:c}], CW[{:c}], sRGB[{:c}]"
 				, this - s_renderWgpu->m_textures
 				, getName( (TextureFormat::Enum)m_textureFormat)
 				, getName( (TextureFormat::Enum)m_requestedFormat)
@@ -3133,7 +3133,7 @@ namespace bgfx { namespace webgpu
 			{
 				format = s_textureFormat[m_textureFormat].m_fmtSrgb;
 				BX_WARN(format != wgpu::TextureFormat::Undefined
-					, "sRGB not supported for texture format %d"
+					, "sRGB not supported for texture format {:d}"
 					, m_textureFormat
 					);
 			}
@@ -3499,7 +3499,7 @@ namespace bgfx { namespace webgpu
 		auto ready = [](WGPUBufferMapAsyncStatus status, void* userdata)
 		{
 			StagingBufferWgpu* staging = static_cast<StagingBufferWgpu*>(userdata);
-			BX_WARN(status == WGPUBufferMapAsyncStatus_Success, "Failed mapping staging buffer (size %d) for writing with error %d", staging->m_size, status);
+			BX_WARN(status == WGPUBufferMapAsyncStatus_Success, "Failed mapping staging buffer (size {:d}) for writing with error {:d}", staging->m_size, status);
 			if (status == WGPUBufferMapAsyncStatus_Success)
 			{
 				void* data = staging->m_buffer.GetMappedRange();

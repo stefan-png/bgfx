@@ -284,7 +284,7 @@ namespace bgfx { namespace mtl
 			NSError* error;
 			id<MTLLibrary> lib =  [m_obj newLibraryWithData:(dispatch_data_t)_data error:&error];
 			BX_WARN(NULL == error
-				, "newLibraryWithData failed: %s"
+				, "newLibraryWithData failed: {:s}"
 				, [error.localizedDescription cStringUsingEncoding:NSASCIIStringEncoding]
 				);
 			return lib;
@@ -295,7 +295,7 @@ namespace bgfx { namespace mtl
 			NSError* error;
 			id<MTLLibrary> lib = [m_obj newLibraryWithSource:@(_source) options:nil error:&error];
 			BX_WARN(NULL == error
-				, "Shader compilation failed: %s"
+				, "Shader compilation failed: {:s}"
 				, [error.localizedDescription cStringUsingEncoding:NSASCIIStringEncoding]
 				);
 			return lib;
@@ -343,7 +343,7 @@ namespace bgfx { namespace mtl
 			NSError* error;
 			id <MTLRenderPipelineState> state = [m_obj newRenderPipelineStateWithDescriptor:_descriptor error:&error];
 			BX_WARN(NULL == error
-				, "newRenderPipelineStateWithDescriptor failed: %s"
+				, "newRenderPipelineStateWithDescriptor failed: {:s}"
 				, [error.localizedDescription cStringUsingEncoding:NSASCIIStringEncoding]
 				);
 			return state;
@@ -359,7 +359,7 @@ namespace bgfx { namespace mtl
 			id <MTLRenderPipelineState> state = [m_obj newRenderPipelineStateWithDescriptor:_descriptor options:_options reflection:_reflection error:&error];
 
 			BX_WARN(NULL == error
-				, "newRenderPipelineStateWithDescriptor failed: %s"
+				, "newRenderPipelineStateWithDescriptor failed: {:s}"
 				, [error.localizedDescription cStringUsingEncoding:NSASCIIStringEncoding]
 				);
 			return state;
@@ -376,7 +376,7 @@ namespace bgfx { namespace mtl
 			id <MTLComputePipelineState> state = [m_obj newComputePipelineStateWithFunction:_computeFunction options:_options reflection:_reflection error:&error];
 
 			BX_WARN(NULL == error
-				, "newComputePipelineStateWithFunction failed: %s"
+				, "newComputePipelineStateWithFunction failed: {:s}"
 				, [error.localizedDescription cStringUsingEncoding:NSASCIIStringEncoding]
 				);
 			return state;

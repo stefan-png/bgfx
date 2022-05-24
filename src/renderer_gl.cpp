@@ -1162,7 +1162,7 @@ namespace bgfx { namespace gl
 				bx::strCopy(name, BX_COUNTOF(name), pos, len);
 				name[len] = '\0';
 
-				BX_TRACE("\t%s", name);
+				BX_TRACE("\t{}", name);
 
 				pos += len+1;
 			}
@@ -1200,7 +1200,7 @@ namespace bgfx { namespace gl
 	{
 		if (GL_DEBUG_SEVERITY_NOTIFICATION != _severity)
 		{
-			BX_TRACE("src %s, type %s, id %d, severity %s, '%s'"
+			BX_TRACE("src {}, type {}, id {:d}, severity {}, '{}'"
 					, toString(_source)
 					, toString(_type)
 					, _id
@@ -1216,7 +1216,7 @@ namespace bgfx { namespace gl
 		GLint result = 0;
 		glGetIntegerv(_pname, &result);
 		GLenum err = getGlError();
-		BX_WARN(0 == err, "glGetIntegerv(0x%04x, ...) failed with GL error: 0x%04x.", _pname, err);
+		BX_WARN(0 == err, "glGetIntegerv(0x{:04x}, ...) failed with GL error: 0x{:04x}.", _pname, err);
 		return 0 == err ? result : 0;
 	}
 
@@ -1810,7 +1810,7 @@ namespace bgfx { namespace gl
 		if (0 == err)
 		{
 			err = initTestTexture(_format, _srgb, _mipAutogen, _array, _dim);
-			BX_WARN(0 == err, "TextureFormat::%s %s%s%sis not supported (%x: %s)."
+			BX_WARN(0 == err, "TextureFormat::{} {}{}%sis not supported ({:x}: {})."
 				, getName(_format)
 				, _srgb       ? "+sRGB "       : ""
 				, _mipAutogen ? "+mipAutoGen " : ""
@@ -2127,7 +2127,7 @@ namespace bgfx { namespace gl
 			}
 		}
 
-		BX_TRACE("GL_EXTENSION %s: %.*s", supported ? " (supported)" : "", _name.getLength(), _name.getPtr() );
+		BX_TRACE("GL_EXTENSION {}: %.*s", supported ? " (supported)" : "", _name.getLength(), _name.getPtr() );
 		BX_UNUSED(supported);
 	}
 
@@ -2240,7 +2240,7 @@ namespace bgfx { namespace gl
 					bx::fromString(&minorGlVersion, version + 2);
 					int32_t glVersion = majorGlVersion*10 + minorGlVersion;
 
-					BX_TRACE("WebGL context version %d (%d.%d).", glVersion, majorGlVersion, minorGlVersion);
+					BX_TRACE("WebGL context version {:d} ({:d}.{:d}).", glVersion, majorGlVersion, minorGlVersion);
 
 					m_gles3 = glVersion >= 30;
 				}
@@ -2264,7 +2264,7 @@ namespace bgfx { namespace gl
 
 			GLint numCmpFormats = 0;
 			GL_CHECK(glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &numCmpFormats) );
-			BX_TRACE("GL_NUM_COMPRESSED_TEXTURE_FORMATS %d", numCmpFormats);
+			BX_TRACE("GL_NUM_COMPRESSED_TEXTURE_FORMATS {:d}", numCmpFormats);
 
 			GLint* cmpFormat = NULL;
 
@@ -2287,13 +2287,13 @@ namespace bgfx { namespace gl
 						}
 					}
 
-					BX_TRACE("  %3d: %8x %s", ii, internalFmt, getName( (TextureFormat::Enum)fmt) );
+					BX_TRACE("  {:3d}: %8x {}", ii, internalFmt, getName( (TextureFormat::Enum)fmt) );
 				}
 			}
 
 			if (BX_ENABLED(BGFX_CONFIG_DEBUG) )
 			{
-#define GL_GET(_pname, _min) BX_TRACE("  " #_pname " %d (min: %d)", glGet(_pname), _min)
+#define GL_GET(_pname, _min) BX_TRACE("  " #_pname " {:d} (min: {:d})", glGet(_pname), _min)
 				BX_TRACE("Defaults:");
 #if BGFX_CONFIG_RENDERER_OPENGL >= 41 || BGFX_CONFIG_RENDERER_OPENGLES
 				GL_GET(GL_MAX_FRAGMENT_UNIFORM_VECTORS, 16);
@@ -2316,10 +2316,10 @@ namespace bgfx { namespace gl
 
 #undef GL_GET
 
-				BX_TRACE("      Vendor: %s", m_vendor);
-				BX_TRACE("    Renderer: %s", m_renderer);
-				BX_TRACE("     Version: %s", m_version);
-				BX_TRACE("GLSL version: %s", m_glslVersion);
+				BX_TRACE("      Vendor: {}", m_vendor);
+				BX_TRACE("    Renderer: {}", m_renderer);
+				BX_TRACE("     Version: {}", m_version);
+				BX_TRACE("GLSL version: {}", m_glslVersion);
 			}
 
 			// Initial binary shader hash depends on driver version.
@@ -2382,7 +2382,7 @@ namespace bgfx { namespace gl
 				{
 					if (s_extension[ii].m_supported)
 					{
-						BX_TRACE("\t%2d: %s", ii, s_extension[ii].m_name);
+						BX_TRACE("\t{:2d}: {}", ii, s_extension[ii].m_name);
 					}
 				}
 			}
@@ -3567,7 +3567,7 @@ namespace bgfx { namespace gl
 				break;
 
 			default:
-				BX_ASSERT(false, "Invalid handle type?! %d", _handle.type);
+				BX_ASSERT(false, "Invalid handle type?! {:d}", _handle.type);
 				break;
 			}
 		}
@@ -3824,7 +3824,7 @@ namespace bgfx { namespace gl
 				GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, m_msaaBackBufferRbos[1]) );
 
 				BX_ASSERT(GL_FRAMEBUFFER_COMPLETE ==  glCheckFramebufferStatus(GL_FRAMEBUFFER)
-					, "glCheckFramebufferStatus failed 0x%08x"
+					, "glCheckFramebufferStatus failed 0x{:08x}"
 					, glCheckFramebufferStatus(GL_FRAMEBUFFER)
 					);
 
@@ -4228,7 +4228,7 @@ namespace bgfx { namespace gl
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("%4d: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 			}
@@ -4583,7 +4583,7 @@ namespace bgfx { namespace gl
 	{
 		GLenum complete = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		BX_ASSERT(GL_FRAMEBUFFER_COMPLETE == complete
-			, "glCheckFramebufferStatus failed 0x%08x: %s"
+			, "glCheckFramebufferStatus failed 0x{:08x}: {}"
 			, complete
 			, glEnumName(complete)
 		);
@@ -4656,7 +4656,7 @@ namespace bgfx { namespace gl
 
 #undef GLSL_TYPE
 
-		BX_ASSERT(false, "Unknown GLSL type? %x", _type);
+		BX_ASSERT(false, "Unknown GLSL type? {:x}", _type);
 		return "UNKNOWN GLSL TYPE!";
 	}
 
@@ -4684,7 +4684,7 @@ namespace bgfx { namespace gl
 
 #undef GLENUM
 
-		BX_WARN(false, "Unknown enum? %x", _enum);
+		BX_WARN(false, "Unknown enum? {:x}", _enum);
 		return "<GLenum?>";
 	}
 
@@ -4753,14 +4753,14 @@ namespace bgfx { namespace gl
 			return UniformType::Sampler;
 		};
 
-		BX_ASSERT(false, "Unrecognized GL type 0x%04x.", _type);
+		BX_ASSERT(false, "Unrecognized GL type 0x{:04x}.", _type);
 		return UniformType::End;
 	}
 
 	void ProgramGL::create(const ShaderGL& _vsh, const ShaderGL& _fsh)
 	{
 		m_id = glCreateProgram();
-		BX_TRACE("Program create: GL%d: GL%d, GL%d", m_id, _vsh.m_id, _fsh.m_id);
+		BX_TRACE("Program create: GL{:d}: GL{:d}, GL{:d}", m_id, _vsh.m_id, _fsh.m_id);
 
 		const uint64_t id = (uint64_t(_vsh.m_hash)<<32) | _fsh.m_hash;
 		const bool cached = s_renderGL->programFetchFromCache(m_id, id);
@@ -4784,7 +4784,7 @@ namespace bgfx { namespace gl
 				{
 					char log[1024];
 					GL_CHECK(glGetProgramInfoLog(m_id, sizeof(log), NULL, log) );
-					BX_TRACE("%d: %s", linked, log);
+					BX_TRACE("{:d}: {}", linked, log);
 				}
 			}
 
@@ -4870,8 +4870,8 @@ namespace bgfx { namespace gl
 		uint32_t maxLength = bx::uint32_max(max0, max1);
 		char* name = (char*)alloca(maxLength + 1);
 
-		BX_TRACE("Program %d", m_id);
-		BX_TRACE("Attributes (%d):", activeAttribs);
+		BX_TRACE("Program {:d}", m_id);
+		BX_TRACE("Attributes ({:d}):", activeAttribs);
 		for (int32_t ii = 0; ii < activeAttribs; ++ii)
 		{
 			GLint size;
@@ -4896,7 +4896,7 @@ namespace bgfx { namespace gl
 				GL_CHECK(glGetActiveAttrib(m_id, ii, maxLength + 1, NULL, &size, &type, name) );
 			}
 
-			BX_TRACE("\t%s %s is at location %d"
+			BX_TRACE("\t{} {} is at location {:d}"
 				, glslTypeName(type)
 				, name
 				, glGetAttribLocation(m_id, name)
@@ -4906,7 +4906,7 @@ namespace bgfx { namespace gl
 		m_numPredefined = 0;
 		m_numSamplers = 0;
 
-		BX_TRACE("Uniforms (%d):", activeUniforms);
+		BX_TRACE("Uniforms ({:d}):", activeUniforms);
 		for (int32_t ii = 0; ii < activeUniforms; ++ii)
 		{
 			struct VariableInfo
@@ -4959,7 +4959,7 @@ namespace bgfx { namespace gl
 			if (!array.isEmpty() )
 			{
 				name[array.getPtr() - name] = '\0';
-				BX_TRACE("--- %s", name);
+				BX_TRACE("--- {}", name);
 				const bx::StringView end = bx::strFind(array.getPtr()+1, ']');
 				bx::fromString(&offset, bx::StringView(array.getPtr()+1, end.getPtr() ) );
 			}
@@ -5006,13 +5006,13 @@ namespace bgfx { namespace gl
 			case GL_UNSIGNED_INT_IMAGE_CUBE:
 				if (m_numSamplers < BX_COUNTOF(m_sampler) )
 				{
-					BX_TRACE("Sampler #%d at location %d.", m_numSamplers, loc);
+					BX_TRACE("Sampler #{:d} at location {:d}.", m_numSamplers, loc);
 					m_sampler[m_numSamplers] = loc;
 					m_numSamplers++;
 				}
 				else
 				{
-					BX_TRACE("Too many samplers (max: %d)! Sampler at location %d."
+					BX_TRACE("Too many samplers (max: {:d})! Sampler at location {:d}."
 							, BX_COUNTOF(m_sampler)
 							, loc
 							);
@@ -5034,7 +5034,7 @@ namespace bgfx { namespace gl
 			else
 			{
 				const UniformRegInfo* info = s_renderGL->m_uniformReg.find(name);
-				BX_WARN(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+				BX_WARN(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 				if (NULL != info)
 				{
@@ -5046,11 +5046,11 @@ namespace bgfx { namespace gl
 					UniformType::Enum type = convertGlType(gltype);
 					m_constantBuffer->writeUniformHandle(type, 0, info->m_handle, uint16_t(num) );
 					m_constantBuffer->write(loc);
-					BX_TRACE("store %s %d", name, info->m_handle);
+					BX_TRACE("store {} {:d}", name, info->m_handle);
 				}
 			}
 
-			BX_TRACE("\tuniform %s %s%s is at location %d, size %d, offset %d"
+			BX_TRACE("\tuniform {} {}{} is at location {:d}, size {:d}, offset {:d}"
 				, glslTypeName(gltype)
 				, name
 				, PredefinedUniform::Count != predefined ? "*" : ""
@@ -5075,7 +5075,7 @@ namespace bgfx { namespace gl
 			VariableInfo vi;
 			GLenum props[] = { GL_TYPE };
 
-			BX_TRACE("Buffers (%d):", activeBuffers);
+			BX_TRACE("Buffers ({:d}):", activeBuffers);
 			for (int32_t ii = 0; ii < activeBuffers; ++ii)
 			{
 				GL_CHECK(glGetProgramResourceiv(m_id
@@ -5096,7 +5096,7 @@ namespace bgfx { namespace gl
 					, name
 					) );
 
-				BX_TRACE("\t%s %s at %d"
+				BX_TRACE("\t{} {} at {:d}"
 					, glslTypeName(vi.type)
 					, name
 					, 0 //vi.loc
@@ -5111,12 +5111,12 @@ namespace bgfx { namespace gl
 			GLint loc = glGetAttribLocation(m_id, s_attribName[ii]);
 			if (-1 != loc)
 			{
-				BX_TRACE("attr %s: %d", s_attribName[ii], loc);
+				BX_TRACE("attr {}: {:d}", s_attribName[ii], loc);
 				m_attributes[ii] = loc;
 				m_used[used++] = ii;
 			}
 		}
-		BX_ASSERT(used < BX_COUNTOF(m_used), "Out of bounds %d > array size %d.", used, Attrib::Count);
+		BX_ASSERT(used < BX_COUNTOF(m_used), "Out of bounds {:d} > array size {:d}.", used, Attrib::Count);
 		m_usedCount = (uint8_t)used;
 
 		used = 0;
@@ -5125,12 +5125,12 @@ namespace bgfx { namespace gl
 			GLint loc = glGetAttribLocation(m_id, s_instanceDataName[ii]);
 			if (-1 != loc)
 			{
-				BX_TRACE("instance data %s: %d", s_instanceDataName[ii], loc);
+				BX_TRACE("instance data {}: {:d}", s_instanceDataName[ii], loc);
 				m_instanceData[used++] = loc;
 			}
 		}
 		BX_ASSERT(used < BX_COUNTOF(m_instanceData)
-			, "Out of bounds %d > array size %d."
+			, "Out of bounds {:d} > array size {:d}."
 			, used
 			, BX_COUNTOF(m_instanceData)
 			);
@@ -5495,7 +5495,7 @@ namespace bgfx { namespace gl
 				|| swizzle
 				;
 
-			BX_TRACE("Texture%-4s %3d: %s %s(requested: %s), layers %d, %dx%dx%d%s."
+			BX_TRACE("Texture%-4s {:3d}: {} {}(requested: {}), layers {:d}, %dx%dx{:d}{}."
 				, imageContainer.m_cubeMap ? "Cube" : (1 < imageContainer.m_depth ? "3D" : "2D")
 				, this - s_renderGL->m_textures
 				, getName( (TextureFormat::Enum)m_textureFormat)
@@ -5508,7 +5508,7 @@ namespace bgfx { namespace gl
 				, 0 != (m_flags&BGFX_TEXTURE_RT_MASK) ? " (render target)" : ""
 				);
 
-			BX_WARN(!convert, "Texture %s%s%s from %s to %s."
+			BX_WARN(!convert, "Texture {}{}{} from {} to {}."
 				, swizzle ? "swizzle" : ""
 				, swizzle&&convert ? " and " : ""
 				, convert ? "convert" : ""
@@ -5984,7 +5984,7 @@ namespace bgfx { namespace gl
 		uint16_t count;
 		bx::read(&reader, count, &err);
 
-		BX_TRACE("%s Shader consts %d"
+		BX_TRACE("{} Shader consts {:d}"
 			, getShaderTypeName(magic)
 			, count
 			);
@@ -6629,7 +6629,7 @@ namespace bgfx { namespace gl
 				for (int32_t line = 1; !lineReader.isDone(); ++line)
 				{
 					bx::StringView str = lineReader.next();
-					BX_TRACE("%3d %.*s", line, str.getLength(), str.getPtr() );
+					BX_TRACE("{:3d} %.*s", line, str.getLength(), str.getPtr() );
 					BX_UNUSED(str);
 				}
 
@@ -6639,7 +6639,7 @@ namespace bgfx { namespace gl
 
 				GL_CHECK(glDeleteShader(m_id) );
 				m_id = 0;
-				BGFX_FATAL(false, bgfx::Fatal::InvalidShader, "Failed to compile shader. %d: %s", compiled, log);
+				BGFX_FATAL(false, bgfx::Fatal::InvalidShader, "Failed to compile shader. {:d}: {}", compiled, log);
 			}
 			else if (BX_ENABLED(BGFX_CONFIG_DEBUG)
 				 &&  s_extension[Extension::ANGLE_translated_shader_source].m_supported
@@ -6651,7 +6651,7 @@ namespace bgfx { namespace gl
 				char* source = (char*)alloca(len);
 				GL_CHECK(glGetTranslatedShaderSourceANGLE(m_id, len, &len, source) );
 
-				BX_TRACE("ANGLE source (len: %d):\n%s\n####", len, source);
+				BX_TRACE("ANGLE source (len: {:d}):\n{}\n####", len, source);
 			}
 		}
 	}
@@ -7165,7 +7165,7 @@ namespace bgfx { namespace gl
 					) );
 
 				GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-				BX_ASSERT(GL_FRAMEBUFFER_COMPLETE == status, "glCheckFramebufferStatus failed 0x%08x", status);
+				BX_ASSERT(GL_FRAMEBUFFER_COMPLETE == status, "glCheckFramebufferStatus failed 0x{:08x}", status);
 				BX_UNUSED(status);
 
 				GL_CHECK(glActiveTexture(GL_TEXTURE0) );

@@ -694,7 +694,7 @@ namespace bgfx
 
 	const char* getName(SpvOpcode::Enum _opcode)
 	{
-		BX_WARN(_opcode <= SpvOpcode::Count, "Unknown opcode id %d.", _opcode);
+		BX_WARN(_opcode <= SpvOpcode::Count, "Unknown opcode id {:d}.", _opcode);
 		return _opcode <= SpvOpcode::Count
 			?  s_spvOpcode[_opcode]
 			: "?SpvOpcode?"
@@ -809,7 +809,7 @@ namespace bgfx
 	const char* getName(SpvDecoration::Enum _enum)
 	{
 		BX_UNUSED(s_spvDecorationInfo);
-		BX_ASSERT(_enum <= SpvDecoration::Count, "Unknown decoration id %d.", _enum);
+		BX_ASSERT(_enum <= SpvDecoration::Count, "Unknown decoration id {:d}.", _enum);
 		return _enum <= SpvDecoration::Count
 			?  s_spvDecoration[_enum]
 			: "?SpvDecoration?"
@@ -839,7 +839,7 @@ namespace bgfx
 
 	const char* getName(SpvStorageClass::Enum _enum)
 	{
-		BX_ASSERT(_enum <= SpvStorageClass::Count, "Unknown storage class id %d.", _enum);
+		BX_ASSERT(_enum <= SpvStorageClass::Count, "Unknown storage class id {:d}.", _enum);
 		return _enum <= SpvStorageClass::Count
 			?  s_spvStorageClass[_enum]
 			: "?SpvStorageClass?"
@@ -895,7 +895,7 @@ namespace bgfx
 
 	const char* getName(SpvBuiltin::Enum _enum)
 	{
-		BX_ASSERT(_enum <= SpvBuiltin::Count, "Unknown builtin id %d.", _enum);
+		BX_ASSERT(_enum <= SpvBuiltin::Count, "Unknown builtin id {:d}.", _enum);
 		return _enum <= SpvBuiltin::Count
 			?  s_spvBuiltin[_enum]
 			: "?SpvBuiltin?"
@@ -1193,7 +1193,7 @@ namespace bgfx
 
 			if (size/4 != instruction.length)
 			{
-				BX_TRACE("read %d, expected %d, %s"
+				BX_TRACE("read {:d}, expected {:d}, {}"
 						, size/4
 						, instruction.length
 						, getName(instruction.opcode)

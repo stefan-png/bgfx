@@ -271,7 +271,7 @@ namespace bgfx
 					break;
 
 				default:
-					BX_ASSERT(false, "predefined %d not handled", predefined.m_type);
+					BX_ASSERT(false, "predefined {:d} not handled", predefined.m_type);
 					break;
 				}
 			}

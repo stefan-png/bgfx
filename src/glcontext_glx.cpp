@@ -114,7 +114,7 @@ namespace bgfx { namespace gl
 			BGFX_FATAL(version, Fatal::UnableToInitialize, "Failed to query GLX version");
 			BGFX_FATAL( (major == 1 && minor >= 2) || major > 1
 					, Fatal::UnableToInitialize
-					, "GLX version is not >=1.2 (%d.%d)."
+					, "GLX version is not >=1.2 ({:d}.{:d})."
 					, major
 					, minor
 					);
@@ -145,7 +145,7 @@ namespace bgfx { namespace gl
 			int numConfigs;
 			GLXFBConfig* configs = glXChooseFBConfig(m_display, screen, attrsGlx, &numConfigs);
 
-			BX_TRACE("glX num configs %d", numConfigs);
+			BX_TRACE("glX num configs {:d}", numConfigs);
 
 			for (int ii = 0; ii < numConfigs; ++ii)
 			{
@@ -158,7 +158,7 @@ namespace bgfx { namespace gl
 					{
 						int value;
 						glXGetFBConfigAttrib(m_display, configs[ii], attrsGlx[attr], &value);
-						BX_TRACE("glX %d/%d %2d: %4x, %8x (%8x%s)"
+						BX_TRACE("glX {:d}/{:d} {:2d}: %4x, %8x (%8x{})"
 								, ii
 								, numConfigs
 								, attr/2
@@ -180,7 +180,7 @@ namespace bgfx { namespace gl
 					if (valid)
 					{
 						bestConfig = configs[ii];
-						BX_TRACE("Best config %d.", ii);
+						BX_TRACE("Best config {:d}.", ii);
 						break;
 					}
 				}
@@ -200,7 +200,7 @@ namespace bgfx { namespace gl
 
 			if (NULL != glXCreateContextAttribsARB)
 			{
-				BX_TRACE("Create GL %d.%d context.", BGFX_CONFIG_RENDERER_OPENGL / 10, BGFX_CONFIG_RENDERER_OPENGL % 10);
+				BX_TRACE("Create GL {:d}.{:d} context.", BGFX_CONFIG_RENDERER_OPENGL / 10, BGFX_CONFIG_RENDERER_OPENGL % 10);
 				int32_t flags = BGFX_CONFIG_DEBUG ? GLX_CONTEXT_DEBUG_BIT_ARB : 0;
 				const int contextAttrs[] =
 				{
@@ -376,7 +376,7 @@ namespace bgfx { namespace gl
 				BX_TRACE("%p " #_func " (" #_import ")", _func);                          \
 				BGFX_FATAL(_optional || NULL != _func                                     \
 					, Fatal::UnableToInitialize                                           \
-					, "Failed to create OpenGL context. glXGetProcAddress %s", #_import); \
+					, "Failed to create OpenGL context. glXGetProcAddress {}", #_import); \
 			}                                                                             \
 		}
 

@@ -364,6 +364,7 @@ namespace bgfx { namespace gl
 		}
 	}
 
+// ============= Modified from original! changed _func to #_func on line 367
 	void GlContext::import()
 	{
 		BX_TRACE("Import:");
@@ -372,9 +373,9 @@ namespace bgfx { namespace gl
 					if (_func == NULL) \
 					{ \
 						_func = (_proto)bx::dlsym(s_opengl, #_import); \
-						BX_TRACE("%p " #_func " (" #_import ")", _func); \
+						BX_TRACE("%p " #_func " (" #_import ")", #_func); \
 					} \
-					BGFX_FATAL(_optional || NULL != _func, Fatal::UnableToInitialize, "Failed to create OpenGL context. GetProcAddress(\"%s\")", #_import); \
+					BGFX_FATAL(_optional || NULL != _func, Fatal::UnableToInitialize, "Failed to create OpenGL context. GetProcAddress(\"{}\")", #_import); \
 				}
 #	include "glimports.h"
 	}

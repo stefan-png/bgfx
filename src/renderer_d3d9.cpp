@@ -516,7 +516,7 @@ namespace bgfx { namespace d3d9
 					HRESULT hr = m_d3d9ex->QueryInterface(IID_IDirect3D9, (void**)&m_d3d9);
 					if (FAILED(hr) )
 					{
-						BX_TRACE("Failed to query D3D9 interface 0x%08x.", hr);
+						BX_TRACE("Failed to query D3D9 interface 0x{:08x}.", hr);
 						DX_RELEASE(m_d3d9ex, 0);
 					}
 					else
@@ -562,11 +562,11 @@ namespace bgfx { namespace d3d9
 					HRESULT hr = m_d3d9->GetAdapterIdentifier(ii, 0, &desc);
 					if (SUCCEEDED(hr) )
 					{
-						BX_TRACE("Adapter #%d", ii);
-						BX_TRACE("\tDriver: %s", desc.Driver);
-						BX_TRACE("\tDescription: %s", desc.Description);
-						BX_TRACE("\tDeviceName: %s", desc.DeviceName);
-						BX_TRACE("\tVendorId: 0x%08x, DeviceId: 0x%08x, SubSysId: 0x%08x, Revision: 0x%08x"
+						BX_TRACE("Adapter #{:d}", ii);
+						BX_TRACE("\tDriver: {}", desc.Driver);
+						BX_TRACE("\tDescription: {}", desc.Description);
+						BX_TRACE("\tDeviceName: {}", desc.DeviceName);
+						BX_TRACE("\tVendorId: 0x{:08x}, DeviceId: 0x{:08x}, SubSysId: 0x{:08x}, Revision: 0x{:08x}"
 							, desc.VendorId
 							, desc.DeviceId
 							, desc.SubSysId
@@ -681,7 +681,7 @@ namespace bgfx { namespace d3d9
 			BX_WARN( (D3DPTEXTURECAPS_MIPMAP     & m_caps.TextureCaps) == D3DPTEXTURECAPS_MIPMAP, "D3DPTEXTURECAPS_MIPMAP");
 			BX_WARN( (D3DPTEXTURECAPS_ALPHA      & m_caps.TextureCaps) == D3DPTEXTURECAPS_ALPHA, "D3DPTEXTURECAPS_ALPHA");
 			BX_WARN(m_caps.VertexShaderVersion >= D3DVS_VERSION(2, 0) && m_caps.PixelShaderVersion >= D3DPS_VERSION(2, 1)
-					  , "Shader Model Version (vs: %x, ps: %x)."
+					  , "Shader Model Version (vs: {:x}, ps: {:x})."
 					  , m_caps.VertexShaderVersion
 					  , m_caps.PixelShaderVersion
 					  );
@@ -695,13 +695,13 @@ namespace bgfx { namespace d3d9
 				goto error;
 			}
 
-			BX_TRACE("Max vertex shader 3.0 instr. slots: %d", m_caps.MaxVertexShader30InstructionSlots);
-			BX_TRACE("Max vertex shader constants: %d", m_caps.MaxVertexShaderConst);
-			BX_TRACE("Max fragment shader 2.0 instr. slots: %d", m_caps.PS20Caps.NumInstructionSlots);
-			BX_TRACE("Max fragment shader 3.0 instr. slots: %d", m_caps.MaxPixelShader30InstructionSlots);
-			BX_TRACE("Num simultaneous render targets: %d", m_caps.NumSimultaneousRTs);
-			BX_TRACE("Max vertex index: %d", m_caps.MaxVertexIndex);
-			BX_TRACE("Max streams: %d", m_caps.MaxStreams);
+			BX_TRACE("Max vertex shader 3.0 instr. slots: {:d}", m_caps.MaxVertexShader30InstructionSlots);
+			BX_TRACE("Max vertex shader constants: {:d}", m_caps.MaxVertexShaderConst);
+			BX_TRACE("Max fragment shader 2.0 instr. slots: {:d}", m_caps.PS20Caps.NumInstructionSlots);
+			BX_TRACE("Max fragment shader 3.0 instr. slots: {:d}", m_caps.MaxPixelShader30InstructionSlots);
+			BX_TRACE("Num simultaneous render targets: {:d}", m_caps.NumSimultaneousRTs);
+			BX_TRACE("Max vertex index: {:d}", m_caps.MaxVertexIndex);
+			BX_TRACE("Max streams: {:d}", m_caps.MaxStreams);
 
 			g_caps.supported |= ( 0
 				| BGFX_CAPS_TEXTURE_3D
@@ -731,7 +731,7 @@ namespace bgfx { namespace d3d9
 					ExtendedFormat& fmt = s_extendedFormats[ii];
 					fmt.m_supported = SUCCEEDED(m_d3d9->CheckDeviceFormat(m_adapter, m_deviceType, adapterFormat, fmt.m_usage, fmt.m_type, fmt.m_fmt) );
 					const char* fourcc = (const char*)&fmt.m_fmt;
-					BX_TRACE("\t%2d: %c%c%c%c %s", ii, fourcc[0], fourcc[1], fourcc[2], fourcc[3], fmt.m_supported ? "supported" : "");
+					BX_TRACE("\t{:2d}: {:c}{:c}{:c}{:c} {}", ii, fourcc[0], fourcc[1], fourcc[2], fourcc[3], fmt.m_supported ? "supported" : "");
 					BX_UNUSED(fourcc);
 				}
 
@@ -876,11 +876,11 @@ namespace bgfx { namespace d3d9
 			{
 				int32_t gpuPriority;
 				DX_CHECK(m_deviceEx->GetGPUThreadPriority(&gpuPriority) );
-				BX_TRACE("GPU thread priority: %d", gpuPriority);
+				BX_TRACE("GPU thread priority: {:d}", gpuPriority);
 
 				uint32_t maxLatency;
 				DX_CHECK(m_deviceEx->GetMaximumFrameLatency(&maxLatency) );
-				BX_TRACE("GPU max frame latency: %d", maxLatency);
+				BX_TRACE("GPU max frame latency: {:d}", maxLatency);
 			}
 
 			postReset();
@@ -1235,7 +1235,7 @@ namespace bgfx { namespace d3d9
 
 			if (NULL == swapChain)
 			{
-				BX_TRACE("Unable to capture screenshot %s.", _filePath);
+				BX_TRACE("Unable to capture screenshot {}.", _filePath);
 				return;
 			}
 
@@ -1609,7 +1609,7 @@ namespace bgfx { namespace d3d9
 					}
 					else if (FAILED(hr) )
 					{
-						BX_TRACE("Present failed with err 0x%08x.", hr);
+						BX_TRACE("Present failed with err 0x{:08x}.", hr);
 					}
 				}
 			}
@@ -1964,7 +1964,7 @@ namespace bgfx { namespace d3d9
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("%4d: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 #undef CASE_IMPLEMENT_UNIFORM
@@ -2423,7 +2423,7 @@ namespace bgfx { namespace d3d9
 
 		m_numPredefined = 0;
 
-		BX_TRACE("Shader consts %d", count);
+		BX_TRACE("Shader consts {:d}", count);
 
 		uint8_t fragmentBit = fragment ? kUniformFragmentBit : 0;
 
@@ -2476,7 +2476,7 @@ namespace bgfx { namespace d3d9
 				else if (0 == (kUniformSamplerBit & type) )
 				{
 					const UniformRegInfo* info = s_renderD3D9->m_uniformReg.find(name);
-					BX_WARN(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+					BX_WARN(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 					if (NULL != info)
 					{
@@ -2494,7 +2494,7 @@ namespace bgfx { namespace d3d9
 					kind = "sampler";
 				}
 
-				BX_TRACE("\t%s: %s (%s), num %2d, r.index %3d, r.count %2d"
+				BX_TRACE("\t{}: {} ({}), num {:2d}, r.index {:3d}, r.count {:2d}"
 					, kind
 					, name
 					, getUniformTypeName(UniformType::Enum(type&~kUniformMask) )
@@ -2640,7 +2640,7 @@ namespace bgfx { namespace d3d9
 			}
 		}
 
-		BGFX_FATAL(NULL != m_texture2d, Fatal::UnableToCreateTexture, "Failed to create texture (size: %dx%d, mips: %d, fmt: %d)."
+		BGFX_FATAL(NULL != m_texture2d, Fatal::UnableToCreateTexture, "Failed to create texture (size: %dx{:d}, mips: {:d}, fmt: {:d})."
 			, _width
 			, _height
 			, _numMips
@@ -2684,7 +2684,7 @@ namespace bgfx { namespace d3d9
 			DX_CHECK(device->UpdateTexture(m_staging3d, m_texture3d) );
 		}
 
-		BGFX_FATAL(NULL != m_texture3d, Fatal::UnableToCreateTexture, "Failed to create volume texture (size: %dx%dx%d, mips: %d, fmt: %s)."
+		BGFX_FATAL(NULL != m_texture3d, Fatal::UnableToCreateTexture, "Failed to create volume texture (size: %dx%dx{:d}, mips: {:d}, fmt: {})."
 			, _width
 			, _height
 			, _depth
@@ -2744,7 +2744,7 @@ namespace bgfx { namespace d3d9
 			}
 		}
 
-		BGFX_FATAL(NULL != m_textureCube, Fatal::UnableToCreateTexture, "Failed to create cube texture (edge: %d, mips: %d, fmt: %s)."
+		BGFX_FATAL(NULL != m_textureCube, Fatal::UnableToCreateTexture, "Failed to create cube texture (edge: {:d}, mips: {:d}, fmt: {})."
 			, _width
 			, _numMips
 			, getName(fmt)
@@ -2965,7 +2965,7 @@ namespace bgfx { namespace d3d9
 				createTexture(ti.width, ti.height, ti.numMips);
 			}
 
-			BX_TRACE("Texture %3d: %s (requested: %s), %dx%d%s%s."
+			BX_TRACE("Texture {:3d}: {} (requested: {}), %dx{:d}{}{}."
 				, this - s_renderD3D9->m_textures
 				, getName( (TextureFormat::Enum)m_textureFormat)
 				, getName( (TextureFormat::Enum)m_requestedFormat)
@@ -3708,7 +3708,7 @@ namespace bgfx { namespace d3d9
 			if (FAILED(hr) )
 			{
 				hr = m_device->GetRenderTargetData(srcSurface, dstSurface);
-				BX_WARN(SUCCEEDED(hr), "StretchRect and GetRenderTargetData failed %x.", hr);
+				BX_WARN(SUCCEEDED(hr), "StretchRect and GetRenderTargetData failed {:x}.", hr);
 			}
 
 			srcSurface->Release();

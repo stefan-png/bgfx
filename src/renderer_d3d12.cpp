@@ -484,7 +484,7 @@ namespace bgfx { namespace d3d12
 			, IID_ID3D12Resource
 			, (void**)&resource
 			) );
-		BX_WARN(NULL != resource, "CreateCommittedResource failed (size: %d). Out of memory?"
+		BX_WARN(NULL != resource, "CreateCommittedResource failed (size: {:d}). Out of memory?"
 			, _resourceDesc->Width
 			);
 
@@ -828,7 +828,7 @@ namespace bgfx { namespace d3d12
 							, IID_ID3D12Device
 							, (void**)&m_device
 							);
-					BX_WARN(FAILED(hr), "Direct3D12 device feature level %d.%d."
+					BX_WARN(FAILED(hr), "Direct3D12 device feature level {:d}.{:d}."
 						, (featureLevel[ii] >> 12) & 0xf
 						, (featureLevel[ii] >>  8) & 0xf
 						);
@@ -899,13 +899,13 @@ namespace bgfx { namespace d3d12
 
 			{
 				uint32_t numNodes = m_device->GetNodeCount();
-				BX_TRACE("D3D12 GPU Architecture (num nodes: %d):", numNodes);
+				BX_TRACE("D3D12 GPU Architecture (num nodes: {:d}):", numNodes);
 				for (uint32_t ii = 0; ii < numNodes; ++ii)
 				{
 					D3D12_FEATURE_DATA_ARCHITECTURE architecture;
 					architecture.NodeIndex = ii;
 					DX_CHECK(m_device->CheckFeatureSupport(D3D12_FEATURE_ARCHITECTURE, &architecture, sizeof(architecture) ) );
-					BX_TRACE("\tNode % 2d: TileBasedRenderer %d, UMA %d, CacheCoherentUMA %d"
+					BX_TRACE("\tNode % 2d: TileBasedRenderer {:d}, UMA {:d}, CacheCoherentUMA {:d}"
 						, ii
 						, architecture.TileBasedRenderer
 						, architecture.UMA
@@ -920,12 +920,12 @@ namespace bgfx { namespace d3d12
 
 			DX_CHECK(m_device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &m_options, sizeof(m_options) ) );
 			BX_TRACE("D3D12 options:");
-			BX_TRACE("\tTiledResourcesTier %d", m_options.TiledResourcesTier);
-			BX_TRACE("\tResourceBindingTier %d", m_options.ResourceBindingTier);
-			BX_TRACE("\tROVsSupported %d", m_options.ROVsSupported);
-			BX_TRACE("\tConservativeRasterizationTier %d", m_options.ConservativeRasterizationTier);
-			BX_TRACE("\tCrossNodeSharingTier %d", m_options.CrossNodeSharingTier);
-			BX_TRACE("\tResourceHeapTier %d", m_options.ResourceHeapTier);
+			BX_TRACE("\tTiledResourcesTier {:d}", m_options.TiledResourcesTier);
+			BX_TRACE("\tResourceBindingTier {:d}", m_options.ResourceBindingTier);
+			BX_TRACE("\tROVsSupported {:d}", m_options.ROVsSupported);
+			BX_TRACE("\tConservativeRasterizationTier {:d}", m_options.ConservativeRasterizationTier);
+			BX_TRACE("\tCrossNodeSharingTier {:d}", m_options.CrossNodeSharingTier);
+			BX_TRACE("\tResourceHeapTier {:d}", m_options.ResourceHeapTier);
 
 			initHeapProperties(m_device);
 
@@ -1250,7 +1250,7 @@ namespace bgfx { namespace d3d12
 						}
 						else
 						{
-							BX_TRACE("CheckFeatureSupport failed with %x for format %s.", hr, getName(TextureFormat::Enum(ii) ) );
+							BX_TRACE("CheckFeatureSupport failed with {:x} for format {}.", hr, getName(TextureFormat::Enum(ii) ) );
 						}
 
 						if (0 != (support & BGFX_CAPS_FORMAT_TEXTURE_IMAGE_READ) )
@@ -1315,7 +1315,7 @@ namespace bgfx { namespace d3d12
 						}
 						else
 						{
-							BX_TRACE("CheckFeatureSupport failed with %x for sRGB format %s.", hr, getName(TextureFormat::Enum(ii) ) );
+							BX_TRACE("CheckFeatureSupport failed with {:x} for sRGB format {}.", hr, getName(TextureFormat::Enum(ii) ) );
 						}
 					}
 
@@ -1536,7 +1536,7 @@ namespace bgfx { namespace d3d12
 				m_lost = isLost(hr);
 				BGFX_FATAL(!m_lost
 					, bgfx::Fatal::DeviceLost
-					, "Device is lost. FAILED 0x%08x %s (%s)"
+					, "Device is lost. FAILED 0x{:08x} {} ({})"
 					, hr
 					, getLostReason(hr)
 					, DXGI_ERROR_DEVICE_REMOVED == hr ? getLostReason(m_device->GetDeviceRemovedReason() ) : "no info"
@@ -1945,7 +1945,7 @@ namespace bgfx { namespace d3d12
 				break;
 
 			default:
-				BX_ASSERT(false, "Invalid handle type?! %d", _handle.type);
+				BX_ASSERT(false, "Invalid handle type?! {:d}", _handle.type);
 				break;
 			}
 		}
@@ -2793,7 +2793,7 @@ namespace bgfx { namespace d3d12
 				cachedData = BX_ALLOC(g_allocator, length);
 				if (g_callback->cacheRead(hash, cachedData, length) )
 				{
-					BX_TRACE("Loading cached compute PSO (size %d).", length);
+					BX_TRACE("Loading cached compute PSO (size {:d}).", length);
 					bx::MemoryReader reader(cachedData, length);
 
 					desc.CachedPSO.pCachedBlob           = reader.getDataPtr();
@@ -2805,7 +2805,7 @@ namespace bgfx { namespace d3d12
 						);
 					if (FAILED(hr) )
 					{
-						BX_TRACE("Failed to load cached compute PSO (HRESULT 0x%08x).", hr);
+						BX_TRACE("Failed to load cached compute PSO (HRESULT 0x{:08x}).", hr);
 						bx::memSet(&desc.CachedPSO, 0, sizeof(desc.CachedPSO) );
 					}
 				}
@@ -2946,7 +2946,7 @@ namespace bgfx { namespace d3d12
 					dxbcHash(temp->data + 20, size - 20, temp->data + 4);
 
 					patchShader = 0 == bx::memCmp(program.m_fsh->m_code->data, temp->data, 16);
-					BX_ASSERT(patchShader, "DXBC fragment shader patching error (ShaderHandle: %d).", program.m_fsh - m_shaders);
+					BX_ASSERT(patchShader, "DXBC fragment shader patching error (ShaderHandle: {:d}).", program.m_fsh - m_shaders);
 
 					if (!patchShader)
 					{
@@ -3074,7 +3074,7 @@ namespace bgfx { namespace d3d12
 				cachedData = BX_ALLOC(g_allocator, length);
 				if (g_callback->cacheRead(hash, cachedData, length) )
 				{
-					BX_TRACE("Loading cached graphics PSO (size %d).", length);
+					BX_TRACE("Loading cached graphics PSO (size {:d}).", length);
 					bx::MemoryReader reader(cachedData, length);
 
 					desc.CachedPSO.pCachedBlob           = reader.getDataPtr();
@@ -3086,7 +3086,7 @@ namespace bgfx { namespace d3d12
 									);
 					if (FAILED(hr) )
 					{
-						BX_TRACE("Failed to load cached graphics PSO (HRESULT 0x%08x).", hr);
+						BX_TRACE("Failed to load cached graphics PSO (HRESULT 0x{:08x}).", hr);
 						bx::memSet(&desc.CachedPSO, 0, sizeof(desc.CachedPSO) );
 					}
 				}
@@ -3223,7 +3223,7 @@ namespace bgfx { namespace d3d12
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("%4d: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 			}
@@ -4528,7 +4528,7 @@ namespace bgfx { namespace d3d12
 		m_numPredefined = 0;
 		m_numUniforms = count;
 
-		BX_TRACE("%s Shader consts %d"
+		BX_TRACE("{} Shader consts {:d}"
 			, getShaderTypeName(magic)
 			, count
 			);
@@ -4584,7 +4584,7 @@ namespace bgfx { namespace d3d12
 				else if (0 == (kUniformSamplerBit & type) )
 				{
 					const UniformRegInfo* info = s_renderD3D12->m_uniformReg.find(name);
-					BX_WARN(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+					BX_WARN(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 					if (NULL != info)
 					{
@@ -4602,7 +4602,7 @@ namespace bgfx { namespace d3d12
 					kind = "sampler";
 				}
 
-				BX_TRACE("\t%s: %s (%s), num %2d, r.index %3d, r.count %2d"
+				BX_TRACE("\t{}: {} ({}), num {:2d}, r.index {:3d}, r.count {:2d}"
 					, kind
 					, name
 					, getUniformTypeName(UniformType::Enum(type&~kUniformMask) )
@@ -4726,7 +4726,7 @@ namespace bgfx { namespace d3d12
 				&& !writeOnly
 				;
 
-			BX_TRACE("Texture %3d: %s (requested: %s), %dx%d%s RT[%c], BO[%c], CW[%c]%s."
+			BX_TRACE("Texture {:3d}: {} (requested: {}), %dx{:d}{} RT[{:c}], BO[{:c}], CW[{:c}]{}."
 				, this - s_renderD3D12->m_textures
 				, getName( (TextureFormat::Enum)m_textureFormat)
 				, getName( (TextureFormat::Enum)m_requestedFormat)

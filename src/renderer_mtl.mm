@@ -347,7 +347,7 @@ namespace bgfx { namespace mtl
 			break;
 		};
 
-		BX_ASSERT(false, "Unrecognized Mtl Data type 0x%04x.", _type);
+		BX_ASSERT(false, "Unrecognized Mtl Data type 0x{:04x}.", _type);
 		return UniformType::End;
 	}
 
@@ -978,7 +978,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 			m_cmd.kick(false, true);
 			m_commandBuffer = m_cmd.alloc();
 
-			BX_ASSERT(_mip<texture.m_numMips,"Invalid mip: %d num mips:",_mip,texture.m_numMips);
+			BX_ASSERT(_mip<texture.m_numMips,"Invalid mip: {:d} num mips:",_mip,texture.m_numMips);
 
 			uint32_t srcWidth  = bx::uint32_max(1, texture.m_ptr.width()  >> _mip);
 			uint32_t srcHeight = bx::uint32_max(1, texture.m_ptr.height() >> _mip);
@@ -1199,7 +1199,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 				break;
 
 			default:
-				BX_ASSERT(false, "Invalid handle type?! %d", _handle.type);
+				BX_ASSERT(false, "Invalid handle type?! {:d}", _handle.type);
 				break;
 			}
 		}
@@ -1614,7 +1614,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("{:4d}: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 			}
@@ -1946,15 +1946,15 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 
 				for (MTLArgument* arg in (shaderType == 0 ? _vertexArgs : _fragmentArgs) )
 				{
-					BX_TRACE("arg: %s type:%d", utf8String(arg.name), arg.type);
-
+					BX_TRACE("arg: {:s} type:{:d}", (const char*)utf8String(arg.name), (uint32_t)arg.type);
+					
 					if (arg.active)
 					{
 						if (arg.type == MTLArgumentTypeBuffer
 						&&  0 == bx::strCmp(utf8String(arg.name), SHADER_UNIFORM_NAME) )
 						{
 							BX_ASSERT(arg.index == 0, "Uniform buffer must be in the buffer slot 0.");
-							BX_ASSERT(MTLDataTypeStruct == arg.bufferDataType, "%s's type must be a struct",SHADER_UNIFORM_NAME );
+							BX_ASSERT(MTLDataTypeStruct == arg.bufferDataType, "{:s}'s type must be a struct",SHADER_UNIFORM_NAME );
 
 							if (MTLDataTypeStruct == arg.bufferDataType)
 							{
@@ -1972,7 +1972,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 								for (MTLStructMember* uniform in arg.bufferStructType.members )
 								{
 									const char* name = utf8String(uniform.name);
-									BX_TRACE("uniform: %s type:%d", name, uniform.dataType);
+									BX_TRACE("uniform: {:s} type:{:d}", name, (unsigned long)uniform.dataType);
 
 									MTLDataType dataType = uniform.dataType;
 									uint32_t num = 1;
@@ -1990,7 +1990,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 										case MTLDataTypeFloat3x3: num *= 3; break;
 
 										default:
-											BX_WARN(0, "Unsupported uniform MTLDataType: %d", uniform.dataType);
+											BX_WARN(0, "Unsupported uniform MTLDataType: {:d}", (unsigned long)uniform.dataType);
 											break;
 									}
 
@@ -2006,7 +2006,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 									else
 									{
 										const UniformRegInfo* info = s_renderMtl->m_uniformReg.find(name);
-										BX_WARN(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+										BX_WARN(NULL != info, "User defined uniform '{:s}' is not found, it won't be set.", name);
 
 										if (NULL != info)
 										{
@@ -2017,7 +2017,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 
 											UniformType::Enum type = convertMtlType(dataType);
 											constantBuffer->writeUniformHandle( (UniformType::Enum)(type|fragmentBit), uint32_t(uniform.offset), info->m_handle, uint16_t(num) );
-											BX_TRACE("store %s %d offset:%d", name, info->m_handle, uint32_t(uniform.offset) );
+											BX_TRACE("store {:s} {:d} offset:{:d}", name, (UniformHandle)info->m_handle, uint32_t(uniform.offset) );
 										}
 									}
 								}
@@ -2033,8 +2033,8 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 							if (arg.index >= BGFX_CONFIG_MAX_TEXTURE_SAMPLERS)
 							{
 								BX_TRACE(
-									  "Binding index is too large %d max is %d. "
-									  "User defined uniform '%s' won't be set."
+									  "Binding index is too large {:d} max is {:d}. "
+									  "User defined uniform '{:s}' won't be set."
 									, int32_t(arg.index - 1)
 									, BGFX_CONFIG_MAX_TEXTURE_SAMPLERS - 1
 									, name
@@ -2046,7 +2046,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 									? PipelineStateMtl::BindToFragmentShader
 									: PipelineStateMtl::BindToVertexShader
 									;
-								BX_TRACE("Buffer %s index: %d", name, int32_t(arg.index-1) );
+								BX_TRACE("Buffer {:s} index: {:d}", name, int32_t(arg.index-1) );
 							}
 						}
 						else if (arg.type == MTLArgumentTypeTexture)
@@ -2054,7 +2054,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 							const char* name = utf8String(arg.name);
 							if (arg.index >= BGFX_CONFIG_MAX_TEXTURE_SAMPLERS)
 							{
-								BX_WARN(false, "Binding index is too large %d max is %d. User defined uniform '%s' won't be set.", int(arg.index), BGFX_CONFIG_MAX_TEXTURE_SAMPLERS - 1, name);
+								BX_WARN(false, "Binding index is too large {:d} max is {:d}. User defined uniform '{:s}' won't be set.", int(arg.index), BGFX_CONFIG_MAX_TEXTURE_SAMPLERS - 1, name);
 							}
 							else
 							{
@@ -2062,17 +2062,20 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 								const UniformRegInfo* info = s_renderMtl->m_uniformReg.find(name);
 								if (info)
 								{
-									BX_TRACE("texture %s %d index:%d", name, info->m_handle, uint32_t(arg.index) );
+									BX_TRACE("Info name {}", name);
+									BX_TRACE("Info handle {}", info->m_handle);
+									BX_TRACE("Info index {}", uint32_t(arg.index));
+									BX_TRACE("texture {:s} {:d} index:{:d}", name, (UniformHandle)info->m_handle, uint32_t(arg.index) );
 								}
 								else
 								{
-									BX_TRACE("image %s index:%d", name, uint32_t(arg.index) );
+									BX_TRACE("image {:s} index:{:d}", name, uint32_t(arg.index) );
 								}
 							}
 						}
 						else if (arg.type == MTLArgumentTypeSampler)
 						{
-							BX_TRACE("sampler: %s index:%d", utf8String(arg.name), arg.index);
+							BX_TRACE("sampler: {:s} index:{:d}", utf8String(arg.name), arg.index);
 						}
 					}
 				}
@@ -2292,7 +2295,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 							vertexDesc.attributes[loc].bufferIndex = stream+1;
 							vertexDesc.attributes[loc].offset      = layout.m_offset[attr];
 
-							BX_TRACE("attrib: %s format: %d offset: %d", s_attribName[attr], (int)vertexDesc.attributes[loc].format, (int)vertexDesc.attributes[loc].offset);
+							BX_TRACE("attrib: {:s} format: {:d} offset: {:d}", (const char*)s_attribName[attr], (int)vertexDesc.attributes[loc].format, (int)vertexDesc.attributes[loc].offset);
 
 							attrSet[attr] = true;
 							streamUsed = true;
@@ -2599,7 +2602,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 		uint16_t count;
 		bx::read(&reader, count, &err);
 
-		BX_TRACE("%s Shader consts %d"
+		BX_TRACE("{:s} Shader consts {:d}"
 			, getShaderTypeName(magic)
 			, count
 			);
@@ -2662,7 +2665,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 
 		BGFX_FATAL(NULL != m_function
 			, bgfx::Fatal::InvalidShader
-			, "Failed to create %s shader."
+			, "Failed to create {:s} shader."
 			, getShaderTypeName(magic)
 			);
 
@@ -2694,7 +2697,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 				{
 					const char* name = utf8String(attrib.name);
 					uint32_t loc = (uint32_t)attrib.attributeIndex;
-					BX_TRACE("attr %s: %d", name, loc);
+					BX_TRACE("attr {:s}: {:d}", name, loc);
 
 					for (uint8_t ii = 0; ii < Attrib::Count; ++ii)
 					{
@@ -2862,7 +2865,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 			const bool renderTarget = 0 != (_flags&BGFX_TEXTURE_RT_MASK);
 			const bool srgb         = 0 != (_flags&BGFX_TEXTURE_SRGB);
 
-			BX_TRACE("Texture %3d: %s (requested: %s), layers %d, %dx%d%s RT[%c], WO[%c], CW[%c], sRGB[%c]"
+			BX_TRACE("Texture {:3d}: {:s} (requested: {:s}), layers {:d}, {:d}x{:d}{:s} RT[{:c}], WO[{:c}], CW[{:c}], sRGB[{:c}]"
 				, this - s_renderMtl->m_textures
 				, getName( (TextureFormat::Enum)m_textureFormat)
 				, getName( (TextureFormat::Enum)m_requestedFormat)
@@ -2884,7 +2887,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
 			{
 				format = s_textureFormat[m_textureFormat].m_fmtSrgb;
 				BX_WARN(format != MTLPixelFormatInvalid
-					, "sRGB not supported for texture format %d"
+					, "sRGB not supported for texture format {:d}"
 					, m_textureFormat
 					);
 			}
@@ -4735,7 +4738,7 @@ BX_STATIC_ASSERT(BX_COUNTOF(s_accessNames) == Access::Count, "Invalid s_accessNa
                                         )
 									{
 										BGFX_FATAL(false, Fatal::DebugCheck,
-										"Failed to set image with access: %s, format:%s is not supoort", s_accessNames[bind.m_access], bimg::getName(bimg::TextureFormat::Enum(bind.m_format)));
+										"Failed to set image with access: {:s}, format:{:s} is not supoort", s_accessNames[bind.m_access], bimg::getName(bimg::TextureFormat::Enum(bind.m_format)));
 									}
 									TextureMtl& texture = m_textures[bind.m_idx];
 									texture.commit(

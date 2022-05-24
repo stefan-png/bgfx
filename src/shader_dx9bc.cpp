@@ -225,7 +225,7 @@ namespace bgfx
 
 	const char* getName(Dx9bcOpcode::Enum _opcode)
 	{
-		BX_ASSERT(_opcode < Dx9bcOpcode::Count, "Unknown opcode id %d (%x).", _opcode, _opcode);
+		BX_ASSERT(_opcode < Dx9bcOpcode::Count, "Unknown opcode id {:d} ({:x}).", _opcode, _opcode);
 		return s_dx9bcOpcode[_opcode];
 	}
 
@@ -421,7 +421,7 @@ namespace bgfx
 			break;
 		};
 
-//BX_TRACE("%d (%d), %d, %d, 0x%08x"
+//BX_TRACE("{:d} ({:d}), {:d}, {:d}, 0x{:08x}"
 //		, _instruction.opcode
 //		, bx::uint32_min(_instruction.opcode, Dx9bcOpcode::Count)
 //		, _instruction.length
@@ -458,7 +458,7 @@ namespace bgfx
 			break;
 
 		default:
-			BX_ASSERT(false, "Instruction %s with invalid number of operands %d (numValues %d)."
+			BX_ASSERT(false, "Instruction {} with invalid number of operands {:d} (numValues {:d})."
 					, getName(_instruction.opcode)
 					, _instruction.numOperands
 					, info.numValues
@@ -643,7 +643,7 @@ namespace bgfx
 				toString(temp, 512, instruction);
 
 				BX_ASSERT(length/4 == instruction.length
-						, "%s\nread %d, expected %d"
+						, "{}\nread {:d}, expected {:d}"
 						, temp
 						, length/4
 						, instruction.length
@@ -683,7 +683,7 @@ namespace bgfx
 		uint32_t versionMajor = (_bc.version>>8)&0xff;
 		uint32_t versionMinor = _bc.version&0xff;
 		BX_UNUSED(pixelShader, versionMajor, versionMinor);
-		BX_TRACE("%s shader %d.%d"
+		BX_TRACE("{} shader {:d}.{:d}"
 			, pixelShader ? "pixel" : "vertex"
 			, versionMajor
 			, versionMinor
@@ -712,7 +712,7 @@ namespace bgfx
 		{
 			Dx9bcInstruction instruction;
 			uint32_t size = read(&reader, instruction, _err);
-			BX_ASSERT(size/4 == instruction.length, "read %d, expected %d", size/4, instruction.length); BX_UNUSED(size);
+			BX_ASSERT(size/4 == instruction.length, "read {:d}, expected {:d}", size/4, instruction.length); BX_UNUSED(size);
 
 			bool cont = _fn(token * sizeof(uint32_t), instruction, _userData);
 			if (!cont)
@@ -737,7 +737,7 @@ namespace bgfx
 		{
 			Dx9bcInstruction instruction;
 			uint32_t size = read(&reader, instruction, _err);
-			BX_ASSERT(size/4 == instruction.length, "read %d, expected %d", size/4, instruction.length); BX_UNUSED(size);
+			BX_ASSERT(size/4 == instruction.length, "read {:d}, expected {:d}", size/4, instruction.length); BX_UNUSED(size);
 
 			_fn(instruction, _userData);
 

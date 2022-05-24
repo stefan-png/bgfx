@@ -157,7 +157,7 @@ namespace bgfx
 						{
 							char name[64];
 							nvApiGpuGetFullName(m_nvGpu, name);
-							BX_TRACE("%s", name);
+							BX_TRACE("{}", name);
 						}
 						else
 						{
@@ -204,11 +204,11 @@ namespace bgfx
 			{
 				_gpuMemoryMax  = 1024 * int64_t(memInfo.availableDedicatedVideoMemory);
 				_gpuMemoryUsed = 1024 * int64_t(memInfo.availableDedicatedVideoMemory - memInfo.curAvailableDedicatedVideoMemory);
-//				BX_TRACE("            dedicatedVideoMemory: %d KiB", memInfo.dedicatedVideoMemory);
-//				BX_TRACE("   availableDedicatedVideoMemory: %d KiB", memInfo.availableDedicatedVideoMemory);
-//				BX_TRACE("               systemVideoMemory: %d KiB", memInfo.systemVideoMemory);
-//				BX_TRACE("              sharedSystemMemory: %d KiB", memInfo.sharedSystemMemory);
-//				BX_TRACE("curAvailableDedicatedVideoMemory: %d KiB", memInfo.curAvailableDedicatedVideoMemory);
+//				BX_TRACE("            dedicatedVideoMemory: {:d} KiB", memInfo.dedicatedVideoMemory);
+//				BX_TRACE("   availableDedicatedVideoMemory: {:d} KiB", memInfo.availableDedicatedVideoMemory);
+//				BX_TRACE("               systemVideoMemory: {:d} KiB", memInfo.systemVideoMemory);
+//				BX_TRACE("              sharedSystemMemory: {:d} KiB", memInfo.sharedSystemMemory);
+//				BX_TRACE("curAvailableDedicatedVideoMemory: {:d} KiB", memInfo.curAvailableDedicatedVideoMemory);
 			}
 		}
 		else
@@ -274,7 +274,7 @@ namespace bgfx
 			if (1 == result)
 			{
 				result = nvAftermathDx11CreateContextHandle(_deviceCtx, &m_aftermathHandle);
-				BX_WARN(1 == result, "NV Aftermath: nvAftermathDx12CreateContextHandle failed %x", result);
+				BX_WARN(1 == result, "NV Aftermath: nvAftermathDx12CreateContextHandle failed {:x}", result);
 
 				if (1 == result)
 				{
@@ -305,7 +305,7 @@ namespace bgfx
 			if (1 == result)
 			{
 				result = nvAftermathDx12CreateContextHandle(_commandList, &m_aftermathHandle);
-				BX_WARN(1 == result, "NV Aftermath: nvAftermathDx12CreateContextHandle failed %x", result);
+				BX_WARN(1 == result, "NV Aftermath: nvAftermathDx12CreateContextHandle failed {:x}", result);
 
 				if (1 == result)
 				{
@@ -358,7 +358,7 @@ namespace bgfx
 #define NVA_CHECK(_call)                                                          \
 			BX_MACRO_BLOCK_BEGIN                                                  \
 				int32_t __result__ = _call;                                       \
-				BX_ASSERT(1 == __result__, #_call " FAILED 0x%08x\n", __result__); \
+				BX_ASSERT(1 == __result__, #_call " FAILED 0x{:08x}\n", __result__); \
 				BX_UNUSED(__result__);                                            \
 			BX_MACRO_BLOCK_END
 

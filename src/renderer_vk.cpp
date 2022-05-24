@@ -625,7 +625,7 @@ VK_IMPORT_DEVICE
 		{
 			return VK_FALSE;
 		}
-		BX_TRACE("%c%c%c%c%c %19s, %s, %d: %s"
+		BX_TRACE("{:c}{:c}{:c}{:c}{:c} {:19s}, {:s}, {:d}: {:s}"
 			, 0 != (_flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT        ) ? 'I' : '-'
 			, 0 != (_flags & VK_DEBUG_REPORT_WARNING_BIT_EXT            ) ? 'W' : '-'
 			, 0 != (_flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) ? 'P' : '-'
@@ -675,7 +675,7 @@ VK_IMPORT_DEVICE
 					, extensionProperties
 					);
 
-				BX_TRACE("Global extensions (%d):"
+				BX_TRACE("Global extensions ({:d}):"
 					, numExtensionProperties
 					);
 
@@ -688,7 +688,7 @@ VK_IMPORT_DEVICE
 						, _extensions
 						);
 
-					BX_TRACE("\tv%-3d %s%s"
+					BX_TRACE("\tv{:<3d} {:s}{:s}"
 						, extensionProperties[extension].specVersion
 						, extensionProperties[extension].extensionName
 						, supported ? " (supported)" : "", extensionProperties[extension].extensionName
@@ -714,7 +714,7 @@ VK_IMPORT_DEVICE
 			char indent = VK_NULL_HANDLE == _physicalDevice ? '\0' : '\t';
 			BX_UNUSED(indent);
 
-			BX_TRACE("%cLayer extensions (%d):"
+			BX_TRACE("{:c}Layer extensions ({:d}):"
 				, indent
 				, numLayerProperties
 				);
@@ -726,7 +726,7 @@ VK_IMPORT_DEVICE
 					, VK_NULL_HANDLE == _physicalDevice
 					);
 
-				BX_TRACE("%c\t%s (s: 0x%08x, i: 0x%08x), %s"
+				BX_TRACE("{:c}\t{:s} (s: 0x{:08x}, i: 0x{:08x}), {:s}"
 					, indent
 					, layerProperties[layer].layerName
 					, layerProperties[layer].specVersion
@@ -759,7 +759,7 @@ VK_IMPORT_DEVICE
 							, _extensions
 							);
 
-						BX_TRACE("%c\t\t%s (s: 0x%08x)"
+						BX_TRACE("{:c}\t\t{:s} (s: 0x{:08x})"
 							, indent
 							, extensionProperties[extension].extensionName
 							, extensionProperties[extension].specVersion
@@ -811,7 +811,7 @@ VK_IMPORT_DEVICE
 			default: break;
 		}
 
-		BX_WARN(false, "Unknown VkResult? %x", _result);
+		BX_WARN(false, "Unknown VkResult? {:x}", _result);
 		return "<VkResult?>";
 	}
 
@@ -1138,7 +1138,7 @@ VK_IMPORT_DEVICE
 
 #define VK_IMPORT_FUNC(_optional, _func)                  \
 	_func = (PFN_##_func)bx::dlsym(m_vulkan1Dll, #_func); \
-	BX_TRACE("\t%p " #_func, _func);                      \
+	BX_TRACE("\t%p " #_func, #_func);                      \
 	imported &= _optional || NULL != _func
 
 VK_IMPORT
@@ -1185,7 +1185,7 @@ VK_IMPORT
 					&&  layer.m_instance.m_initialize)
 					{
 						enabledLayer[numEnabledLayers++] = layer.m_name;
-						BX_TRACE("\t%s", layer.m_name);
+						BX_TRACE("\t{:s}", layer.m_name);
 					}
 				}
 
@@ -1220,7 +1220,7 @@ VK_IMPORT
 
 				for (uint32_t ii = 0; ii < numEnabledExtensions; ++ii)
 				{
-					BX_TRACE("\t%s", enabledExtension[ii]);
+					BX_TRACE("\t{:s}", enabledExtension[ii]);
 				}
 
 				uint32_t vulkanApiVersionSelector;
@@ -1232,7 +1232,7 @@ VK_IMPORT
 					if (VK_SUCCESS != result)
 					{
 						BX_TRACE(
-							  "Init error: vkEnumerateInstanceVersion failed %d: %s."
+							  "Init error: vkEnumerateInstanceVersion failed {:d}: {}."
 							, result
 							, getName(result)
 							);
@@ -1277,18 +1277,18 @@ VK_IMPORT
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: vkCreateInstance failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: vkCreateInstance failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 
 				m_instanceApiVersion = vulkanApiVersionSelector;
 
-				BX_TRACE("Instance API version: %d.%d.%d"
+				BX_TRACE("Instance API version: {:d}.{:d}.{:d}"
 					, VK_API_VERSION_MAJOR(m_instanceApiVersion)
 					, VK_API_VERSION_MINOR(m_instanceApiVersion)
 					, VK_API_VERSION_PATCH(m_instanceApiVersion)
 					);
-				BX_TRACE("Instance variant: %d", VK_API_VERSION_VARIANT(m_instanceApiVersion) );
+				BX_TRACE("Instance variant: {:d}", VK_API_VERSION_VARIANT(m_instanceApiVersion) );
 			}
 
 			errorState = ErrorState::InstanceCreated;
@@ -1297,7 +1297,7 @@ VK_IMPORT
 
 #define VK_IMPORT_INSTANCE_FUNC(_optional, _func)                           \
 			_func = (PFN_##_func)vkGetInstanceProcAddr(m_instance, #_func); \
-			BX_TRACE("\t%p " #_func, _func);                                \
+			BX_TRACE("\t%p " #_func, #_func);                                \
 			imported &= _optional || NULL != _func
 VK_IMPORT_INSTANCE
 #undef VK_IMPORT_INSTANCE_FUNC
@@ -1326,7 +1326,7 @@ VK_IMPORT_INSTANCE
 					, m_allocatorCb
 					, &m_debugReportCallback
 					);
-				BX_WARN(VK_SUCCESS == result, "vkCreateDebugReportCallbackEXT failed %d: %s.", result, getName(result) );
+				BX_WARN(VK_SUCCESS == result, "vkCreateDebugReportCallbackEXT failed {:d}: {}.", result, getName(result) );
 			}
 
 			{
@@ -1340,7 +1340,7 @@ VK_IMPORT_INSTANCE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: vkEnumeratePhysicalDevices failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: vkEnumeratePhysicalDevices failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 
@@ -1353,7 +1353,7 @@ VK_IMPORT_INSTANCE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: vkEnumeratePhysicalDevices failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: vkEnumeratePhysicalDevices failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 
@@ -1366,17 +1366,17 @@ VK_IMPORT_INSTANCE
 				{
 					VkPhysicalDeviceProperties pdp;
 					vkGetPhysicalDeviceProperties(physicalDevices[ii], &pdp);
-					BX_TRACE("Physical device %d:", ii);
-					BX_TRACE("\t          Name: %s", pdp.deviceName);
-					BX_TRACE("\t   API version: %d.%d.%d"
+					BX_TRACE("Physical device {:d}:", ii);
+					BX_TRACE("\t          Name: {:s}", pdp.deviceName);
+					BX_TRACE("\t   API version: {:d}.{:d}.{:d}"
 						, VK_API_VERSION_MAJOR(pdp.apiVersion)
 						, VK_API_VERSION_MINOR(pdp.apiVersion)
 						, VK_API_VERSION_PATCH(pdp.apiVersion) );
-					BX_TRACE("\t   API variant: %d", VK_API_VERSION_VARIANT(pdp.apiVersion) );
-					BX_TRACE("\tDriver version: %x", pdp.driverVersion);
-					BX_TRACE("\t      VendorId: %x", pdp.vendorID);
-					BX_TRACE("\t      DeviceId: %x", pdp.deviceID);
-					BX_TRACE("\t          Type: %d", pdp.deviceType);
+					BX_TRACE("\t   API variant: {:d}", VK_API_VERSION_VARIANT(pdp.apiVersion) );
+					BX_TRACE("\tDriver version: {:x}", pdp.driverVersion);
+					BX_TRACE("\t      VendorId: {:x}", pdp.vendorID);
+					BX_TRACE("\t      DeviceId: {:x}", pdp.deviceID);
+					BX_TRACE("\t          Type: {:d}", pdp.deviceType);
 
 					g_caps.gpu[ii].vendorId = uint16_t(pdp.vendorID);
 					g_caps.gpu[ii].deviceId = uint16_t(pdp.deviceID);
@@ -1399,22 +1399,22 @@ VK_IMPORT_INSTANCE
 					VkPhysicalDeviceMemoryProperties pdmp;
 					vkGetPhysicalDeviceMemoryProperties(physicalDevices[ii], &pdmp);
 
-					BX_TRACE("\tMemory type count: %d", pdmp.memoryTypeCount);
+					BX_TRACE("\tMemory type count: {:d}", pdmp.memoryTypeCount);
 					for (uint32_t jj = 0; jj < pdmp.memoryTypeCount; ++jj)
 					{
-						BX_TRACE("\t%3d: flags 0x%08x, index %d"
+						BX_TRACE("\t{:3d}: flags 0x{:08x}, index {:d}"
 								, jj
 								, pdmp.memoryTypes[jj].propertyFlags
 								, pdmp.memoryTypes[jj].heapIndex
 								);
 					}
 
-					BX_TRACE("\tMemory heap count: %d", pdmp.memoryHeapCount);
+					BX_TRACE("\tMemory heap count: {:d}", pdmp.memoryHeapCount);
 					for (uint32_t jj = 0; jj < pdmp.memoryHeapCount; ++jj)
 					{
 						char size[16];
 						bx::prettify(size, BX_COUNTOF(size), pdmp.memoryHeaps[jj].size);
-						BX_TRACE("\t%3d: flags 0x%08x, size %10s"
+						BX_TRACE("\t{:3d}: flags 0x{:08x}, size %10s"
 								, jj
 								, pdmp.memoryHeaps[jj].flags
 								, size
@@ -1441,7 +1441,7 @@ VK_IMPORT_INSTANCE
 				g_caps.vendorId = uint16_t(m_deviceProperties.vendorID);
 				g_caps.deviceId = uint16_t(m_deviceProperties.deviceID);
 
-				BX_TRACE("Using physical device %d: %s", physicalDeviceIdx, m_deviceProperties.deviceName);
+				BX_TRACE("Using physical device {:d}: {}", physicalDeviceIdx, m_deviceProperties.deviceName);
 
 				VkPhysicalDeviceFeatures supportedFeatures;
 
@@ -1677,11 +1677,11 @@ VK_IMPORT_INSTANCE
 				{
 					const VkQueueFamilyProperties& qfp = queueFamilyPropertices[ii];
 
-					BX_TRACE("Queue family property %d:", ii);
-					BX_TRACE("\t  Queue flags: 0x%08x", qfp.queueFlags);
-					BX_TRACE("\t  Queue count: %d", qfp.queueCount);
-					BX_TRACE("\tTS valid bits: 0x%08x", qfp.timestampValidBits);
-					BX_TRACE("\t    Min image: %d x %d x %d"
+					BX_TRACE("Queue family property {:d}:", ii);
+					BX_TRACE("\t  Queue flags: 0x{:08x}", qfp.queueFlags);
+					BX_TRACE("\t  Queue count: {:d}", qfp.queueCount);
+					BX_TRACE("\tTS valid bits: 0x{:08x}", qfp.timestampValidBits);
+					BX_TRACE("\t    Min image: {:d} x {:d} x {:d}"
 						, qfp.minImageTransferGranularity.width
 						, qfp.minImageTransferGranularity.height
 						, qfp.minImageTransferGranularity.depth
@@ -1720,7 +1720,7 @@ VK_IMPORT_INSTANCE
 					&&  layer.m_device.m_initialize)
 					{
 						enabledLayer[numEnabledLayers++] = layer.m_name;
-						BX_TRACE("\t%s", layer.m_name);
+						BX_TRACE("\t{:s}", layer.m_name);
 					}
 				}
 
@@ -1753,7 +1753,7 @@ VK_IMPORT_INSTANCE
 
 				for (uint32_t ii = 0; ii < numEnabledExtensions; ++ii)
 				{
-					BX_TRACE("\t%s", enabledExtension[ii]);
+					BX_TRACE("\t{:s}", enabledExtension[ii]);
 				}
 
 				float queuePriorities[1] = { 0.0f };
@@ -1786,7 +1786,7 @@ VK_IMPORT_INSTANCE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: vkCreateDevice failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: vkCreateDevice failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 			}
@@ -1796,7 +1796,7 @@ VK_IMPORT_INSTANCE
 			BX_TRACE("Device functions:");
 #define VK_IMPORT_DEVICE_FUNC(_optional, _func)                         \
 			_func = (PFN_##_func)vkGetDeviceProcAddr(m_device, #_func); \
-			BX_TRACE("\t%p " #_func, _func);                            \
+			BX_TRACE("\t%p " #_func, #_func);                            \
 			imported &= _optional || NULL != _func
 VK_IMPORT_DEVICE
 #undef VK_IMPORT_DEVICE_FUNC
@@ -1819,7 +1819,7 @@ VK_IMPORT_DEVICE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: creating command queue failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: creating command queue failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 
@@ -1827,7 +1827,7 @@ VK_IMPORT_DEVICE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: allocating command buffer failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: allocating command buffer failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 			}
@@ -1856,7 +1856,7 @@ VK_IMPORT_DEVICE
 
 					if (VK_SUCCESS != result)
 					{
-						BX_TRACE("Init error: creating swap chain failed %d: %s.", result, getName(result) );
+						BX_TRACE("Init error: creating swap chain failed {:d}: {}.", result, getName(result) );
 						goto error;
 					}
 
@@ -1891,7 +1891,7 @@ VK_IMPORT_DEVICE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: vkCreateDescriptorPool failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: vkCreateDescriptorPool failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 
@@ -1905,7 +1905,7 @@ VK_IMPORT_DEVICE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: vkCreatePipelineCache failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: vkCreatePipelineCache failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 			}
@@ -1915,7 +1915,7 @@ VK_IMPORT_DEVICE
 				const uint32_t count = BGFX_CONFIG_MAX_DRAW_CALLS;
 				for (uint32_t ii = 0; ii < m_numFramesInFlight; ++ii)
 				{
-					BX_TRACE("Create scratch buffer %d", ii);
+					BX_TRACE("Create scratch buffer {:d}", ii);
 					m_scratchBuffer[ii].create(size, count);
 				}
 			}
@@ -1951,7 +1951,7 @@ VK_IMPORT_DEVICE
 
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Init error: creating GPU timer failed %d: %s.", result, getName(result) );
+					BX_TRACE("Init error: creating GPU timer failed {:d}: {}.", result, getName(result) );
 					goto error;
 				}
 			}
@@ -1962,7 +1962,7 @@ VK_IMPORT_DEVICE
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Init error: creating occlusion query failed %d: %s.", result, getName(result) );
+				BX_TRACE("Init error: creating occlusion query failed {:d}: {}.", result, getName(result) );
 				goto error;
 			}
 
@@ -1970,7 +1970,7 @@ VK_IMPORT_DEVICE
 			return true;
 
 		error:
-			BX_TRACE("errorState %d", errorState);
+			BX_TRACE("errorState {:d}", errorState);
 			switch (errorState)
 			{
 			case ErrorState::TimerQueryCreated:
@@ -2381,7 +2381,7 @@ VK_IMPORT_DEVICE
 
 			if (!isSwapChainReadable(swapChain) )
 			{
-				BX_TRACE("Unable to capture screenshot %s.", _filePath);
+				BX_TRACE("Unable to capture screenshot {}.", _filePath);
 				return;
 			}
 
@@ -2477,7 +2477,7 @@ VK_IMPORT_DEVICE
 				break;
 
 			default:
-				BX_ASSERT(false, "Invalid handle type?! %d", _handle.type);
+				BX_ASSERT(false, "Invalid handle type?! {:d}", _handle.type);
 				break;
 			}
 		}
@@ -3230,7 +3230,7 @@ VK_IMPORT_DEVICE
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create render pass error: vkCreateRenderPass failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create render pass error: vkCreateRenderPass failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -3667,7 +3667,7 @@ VK_IMPORT_DEVICE
 				cachedData = BX_ALLOC(g_allocator, length);
 				if (g_callback->cacheRead(hash, cachedData, length) )
 				{
-					BX_TRACE("Loading cached pipeline state (size %d).", length);
+					BX_TRACE("Loading cached pipeline state (size {:d}).", length);
 					bx::MemoryReader reader(cachedData, length);
 
 					pcci.initialDataSize = (size_t)reader.remaining();
@@ -4103,7 +4103,7 @@ VK_IMPORT_DEVICE
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("%4d: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 			}
@@ -4237,7 +4237,7 @@ VK_IMPORT_DEVICE
 				}
 			}
 
-			BX_TRACE("Failed to find memory that supports flags 0x%08x.", _propertyFlags);
+			BX_TRACE("Failed to find memory that supports flags 0x{:08x}.", _propertyFlags);
 			return -1;
 		}
 
@@ -4284,7 +4284,7 @@ VK_IMPORT_DEVICE
 			result = vkCreateBuffer(m_device, &bci, m_allocatorCb, _buffer);
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create host buffer error: vkCreateBuffer failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create host buffer error: vkCreateBuffer failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -4301,14 +4301,14 @@ VK_IMPORT_DEVICE
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create host buffer error: vkAllocateMemory failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create host buffer error: vkAllocateMemory failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
 			result = vkBindBufferMemory(m_device, *_buffer, *_memory, 0);
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create host buffer error: vkBindBufferMemory failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create host buffer error: vkBindBufferMemory failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -4318,7 +4318,7 @@ VK_IMPORT_DEVICE
 				result = vkMapMemory(m_device, *_memory, 0, _size, 0, &dst);
 				if (VK_SUCCESS != result)
 				{
-					BX_TRACE("Create host buffer error: vkMapMemory failed %d: %s.", result, getName(result) );
+					BX_TRACE("Create host buffer error: vkMapMemory failed {:d}: {}.", result, getName(result) );
 					return result;
 				}
 
@@ -4737,7 +4737,7 @@ VK_DESTROY
 
 		m_oldBindingModel = isShaderVerLess(magic, 11);
 
-		BX_TRACE("%s Shader consts %d"
+		BX_TRACE("{:s} Shader consts {:d}"
 			, getShaderTypeName(magic)
 			, count
 			);
@@ -4867,7 +4867,7 @@ VK_DESTROY
 						const uint16_t stage = regIndex - reverseShift; // regIndex is used for image/sampler binding index
 
 						const UniformRegInfo* info = s_renderVK->m_uniformReg.find(name);
-						BX_ASSERT(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+						BX_ASSERT(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 						m_bindInfo[stage].uniformHandle    = info->m_handle;
 						m_bindInfo[stage].type             = BindType::Sampler;
@@ -4891,7 +4891,7 @@ VK_DESTROY
 					else
 					{
 						const UniformRegInfo* info = s_renderVK->m_uniformReg.find(name);
-						BX_ASSERT(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+						BX_ASSERT(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 						if (NULL != info)
 						{
@@ -4906,7 +4906,7 @@ VK_DESTROY
 					}
 				}
 
-				BX_TRACE("\t%s: %s (%s), r.index %3d, r.count %2d, r.texComponent %1d, r.texDimension %1d"
+				BX_TRACE("\t{:s}: {:s} ({:s}), r.index {:3d}, r.count {:2d}, r.texComponent {:1d}, r.texDimension {:1d}"
 					, kind
 					, name
 					, getUniformTypeName(UniformType::Enum(type&~kUniformMask) )
@@ -5250,7 +5250,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create timer query error: vkCreateQueryPool failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create timer query error: vkCreateQueryPool failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -5268,7 +5268,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create timer query error: vkMapMemory failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create timer query error: vkMapMemory failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -5400,7 +5400,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create occlusion query error: vkCreateQueryPool failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create occlusion query error: vkCreateQueryPool failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -5418,7 +5418,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create occlusion query error: vkMapMemory failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create occlusion query error: vkMapMemory failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -5718,7 +5718,7 @@ VK_DESTROY
 		result = vkCreateImage(device, &ici, allocatorCb, &m_textureImage);
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create texture image error: vkCreateImage failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create texture image error: vkCreateImage failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -5728,14 +5728,14 @@ VK_DESTROY
 		result = s_renderVK->allocateMemory(&imageMemReq, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &m_textureDeviceMem);
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create texture image error: allocateMemory failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create texture image error: allocateMemory failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
 		result = vkBindImageMemory(device, m_textureImage, m_textureDeviceMem, 0);
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create texture image error: vkBindImageMemory failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create texture image error: vkBindImageMemory failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -5761,7 +5761,7 @@ VK_DESTROY
 			result = vkCreateImage(device, &ici_resolve, allocatorCb, &m_singleMsaaImage);
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create texture image error: vkCreateImage failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create texture image error: vkCreateImage failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -5771,14 +5771,14 @@ VK_DESTROY
 			result = s_renderVK->allocateMemory(&imageMemReq_resolve, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &m_singleMsaaDeviceMem);
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create texture image error: allocateMemory failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create texture image error: allocateMemory failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
 			result = vkBindImageMemory(device, m_singleMsaaImage, m_singleMsaaDeviceMem, 0);
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create texture image error: vkBindImageMemory failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create texture image error: vkBindImageMemory failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -5868,7 +5868,7 @@ VK_DESTROY
 			BX_UNUSED(swizzle, writeOnly, computeWrite, renderTarget, blit);
 
 			BX_TRACE(
-				  "Texture %3d: %s (requested: %s), %dx%dx%d%s RT[%c], BO[%c], CW[%c]%s."
+				  "Texture {:3d}: {} (requested: {}), {:d}x{:d}x{:d}{} RT[{:c}], BO[{:c}], CW[{:c}]{}."
 				, (int)(this - s_renderVK->m_textures)
 				, getName( (TextureFormat::Enum)m_textureFormat)
 				, getName( (TextureFormat::Enum)m_requestedFormat)
@@ -6401,7 +6401,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create texture view error: vkCreateImageView failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create texture view error: vkCreateImageView failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -6462,7 +6462,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create swap chain error: creating surface failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create swap chain error: creating surface failed {:d}: {}.", result, getName(result) );
 			goto error;
 		}
 
@@ -6496,7 +6496,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create swap chain error: creating swapchain and image views failed %d: %s", result, getName(result) );
+				BX_TRACE("Create swap chain error: creating swapchain and image views failed {:d}: {}", result, getName(result) );
 				goto error;
 			}
 		}
@@ -6508,7 +6508,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create swap chain error: creating MSAA/depth attachments failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create swap chain error: creating MSAA/depth attachments failed {:d}: {}.", result, getName(result) );
 				goto error;
 			}
 		}
@@ -6520,7 +6520,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create swap chain error: creating frame buffers failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create swap chain error: creating frame buffers failed {:d}: {}.", result, getName(result) );
 				goto error;
 			}
 		}
@@ -6528,7 +6528,7 @@ VK_DESTROY
 		return VK_SUCCESS;
 
 	error:
-		BX_TRACE("errorState %d", errorState);
+		BX_TRACE("errorState {:d}", errorState);
 		switch (errorState)
 		{
 		case ErrorState::AttachmentsCreated:
@@ -6760,7 +6760,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create surface error: vkCreate[Platform]SurfaceKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create surface error: vkCreate[Platform]SurfaceKHR failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -6798,7 +6798,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create swapchain error: vkGetPhysicalDeviceSurfaceCapabilitiesKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create swapchain error: vkGetPhysicalDeviceSurfaceCapabilitiesKHR failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -6810,7 +6810,7 @@ VK_DESTROY
 
 		if (minSwapBufferCount > maxSwapBufferCount)
 		{
-			BX_TRACE("Create swapchain error: Incompatible swapchain image count (min: %d, max: %d, MaxBackBuffers: %d)."
+			BX_TRACE("Create swapchain error: Incompatible swapchain image count (min: {:d}, max: {:d}, MaxBackBuffers: {:d})."
 				, minSwapBufferCount
 				, maxSwapBufferCount
 				, kMaxBackBuffers
@@ -6827,7 +6827,7 @@ VK_DESTROY
 
 		if (TextureFormat::Count == m_colorFormat)
 		{
-			BX_TRACE("Create swapchain error: Unable to find surface format (srgb: %d).", srgb);
+			BX_TRACE("Create swapchain error: Unable to find surface format (srgb: {:d}).", srgb);
 			return VK_ERROR_INITIALIZATION_FAILED;
 		}
 
@@ -6876,7 +6876,7 @@ VK_DESTROY
 		uint32_t presentModeIdx = findPresentMode(vsync);
 		if (UINT32_MAX == presentModeIdx)
 		{
-			BX_TRACE("Create swapchain error: Unable to find present mode (vsync: %d).", vsync);
+			BX_TRACE("Create swapchain error: Unable to find present mode (vsync: {:d}).", vsync);
 			return VK_ERROR_INITIALIZATION_FAILED;
 		}
 
@@ -6894,7 +6894,7 @@ VK_DESTROY
 		result = vkCreateSwapchainKHR(device, &m_sci, allocatorCb, &m_swapchain);
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create swapchain error: vkCreateSwapchainKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create swapchain error: vkCreateSwapchainKHR failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -6903,13 +6903,13 @@ VK_DESTROY
 		result = vkGetSwapchainImagesKHR(device, m_swapchain, &m_numSwapchainImages, NULL);
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
 		if (m_numSwapchainImages < m_sci.minImageCount)
 		{
-			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR: numSwapchainImages %d < minImageCount %d."
+			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR: numSwapchainImages {:d} < minImageCount {:d}."
 				, m_numSwapchainImages
 				, m_sci.minImageCount
 				);
@@ -6918,7 +6918,7 @@ VK_DESTROY
 
 		if (m_numSwapchainImages > BX_COUNTOF(m_backBufferColorImage) )
 		{
-			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR: numSwapchainImages %d > countof(m_backBufferColorImage) %d."
+			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR: numSwapchainImages {:d} > countof(m_backBufferColorImage) {:d}."
 				, m_numSwapchainImages
 				, BX_COUNTOF(m_backBufferColorImage)
 				);
@@ -6928,7 +6928,7 @@ VK_DESTROY
 		result = vkGetSwapchainImagesKHR(device, m_swapchain, &m_numSwapchainImages, &m_backBufferColorImage[0]);
 		if (VK_SUCCESS != result && VK_INCOMPLETE != result)
 		{
-			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR failed %d: %s."
+			BX_TRACE("Create swapchain error: vkGetSwapchainImagesKHR failed {:d}: {}."
 				, result
 				, getName(result)
 				);
@@ -6959,7 +6959,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create swapchain error: vkCreateImageView failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create swapchain error: vkCreateImageView failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -6976,7 +6976,7 @@ VK_DESTROY
 			if (VK_SUCCESS != vkCreateSemaphore(device, &sci, allocatorCb, &m_presentDoneSemaphore[ii])
 			||  VK_SUCCESS != vkCreateSemaphore(device, &sci, allocatorCb, &m_renderDoneSemaphore[ii]) )
 			{
-				BX_TRACE("Create swapchain error: vkCreateSemaphore failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create swapchain error: vkCreateSemaphore failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 		}
@@ -7040,7 +7040,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create swapchain error: creating depth stencil image failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create swapchain error: creating depth stencil image failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -7048,7 +7048,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("Create swapchain error: creating depth stencil image view failed %d: %s.", result, getName(result) );
+			BX_TRACE("Create swapchain error: creating depth stencil image view failed {:d}: {}.", result, getName(result) );
 			return result;
 		}
 
@@ -7064,7 +7064,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create swapchain error: creating MSAA color image failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create swapchain error: creating MSAA color image failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -7072,7 +7072,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create swapchain error: creating MSAA color image view failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create swapchain error: creating MSAA color image view failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 		}
@@ -7166,7 +7166,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("findPresentMode error: vkGetPhysicalDeviceSurfacePresentModesKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("findPresentMode error: vkGetPhysicalDeviceSurfacePresentModesKHR failed {:d}: {}.", result, getName(result) );
 			return UINT32_MAX;
 		}
 
@@ -7181,7 +7181,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("findPresentMode error: vkGetPhysicalDeviceSurfacePresentModesKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("findPresentMode error: vkGetPhysicalDeviceSurfacePresentModesKHR failed {:d}: {}.", result, getName(result) );
 			return UINT32_MAX;
 		}
 
@@ -7205,7 +7205,7 @@ VK_DESTROY
 		if (UINT32_MAX == idx)
 		{
 			idx = 0;
-			BX_TRACE("Present mode not found! Defaulting to %s.", s_presentMode[idx].name);
+			BX_TRACE("Present mode not found! Defaulting to {}.", s_presentMode[idx].name);
 		}
 
 		return idx;
@@ -7224,7 +7224,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("findSurfaceFormat error: vkGetPhysicalDeviceSurfaceFormatsKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("findSurfaceFormat error: vkGetPhysicalDeviceSurfaceFormatsKHR failed {:d}: {}.", result, getName(result) );
 			return selectedFormat;
 		}
 
@@ -7233,7 +7233,7 @@ VK_DESTROY
 
 		if (VK_SUCCESS != result)
 		{
-			BX_TRACE("findSurfaceFormat error: vkGetPhysicalDeviceSurfaceFormatsKHR failed %d: %s.", result, getName(result) );
+			BX_TRACE("findSurfaceFormat error: vkGetPhysicalDeviceSurfaceFormatsKHR failed {:d}: {}.", result, getName(result) );
 			BX_FREE(g_allocator, surfaceFormats);
 			return selectedFormat;
 		}
@@ -7264,7 +7264,7 @@ VK_DESTROY
 					{
 						s_renderVK->m_swapchainFormats[_format] = selectedFormat;
 						BX_TRACE(
-							"findSurfaceFormat: Surface format %s not found! Defaulting to %s."
+							"findSurfaceFormat: Surface format {} not found! Defaulting to {}."
 							, bimg::getName(bimg::TextureFormat::Enum(_format) )
 							, bimg::getName(bimg::TextureFormat::Enum(selectedFormat) )
 							);
@@ -7324,7 +7324,7 @@ VK_DESTROY
 				return false;
 
 			default:
-				BX_ASSERT(VK_SUCCESS == result, "vkAcquireNextImageKHR(...); VK error 0x%x: %s", result, getName(result) );
+				BX_ASSERT(VK_SUCCESS == result, "vkAcquireNextImageKHR(...); VK error 0x{:x}: {}", result, getName(result) );
 				return false;
 			}
 
@@ -7375,7 +7375,7 @@ VK_DESTROY
 				break;
 
 			default:
-				BX_ASSERT(VK_SUCCESS == result, "vkQueuePresentKHR(...); VK error 0x%x: %s", result, getName(result) );
+				BX_ASSERT(VK_SUCCESS == result, "vkQueuePresentKHR(...); VK error 0x{:x}: {}", result, getName(result) );
 				break;
 			}
 
@@ -7678,7 +7678,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create command queue error: vkCreateCommandPool failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create command queue error: vkCreateCommandPool failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -7692,7 +7692,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create command queue error: vkAllocateCommandBuffers failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create command queue error: vkAllocateCommandBuffers failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -7705,7 +7705,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Create command queue error: vkCreateFence failed %d: %s.", result, getName(result) );
+				BX_TRACE("Create command queue error: vkCreateFence failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 		}
@@ -7739,7 +7739,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Allocate command buffer error: vkWaitForFences failed %d: %s.", result, getName(result) );
+				BX_TRACE("Allocate command buffer error: vkWaitForFences failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -7747,7 +7747,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Allocate command buffer error: vkResetCommandPool failed %d: %s.", result, getName(result) );
+				BX_TRACE("Allocate command buffer error: vkResetCommandPool failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -7761,7 +7761,7 @@ VK_DESTROY
 
 			if (VK_SUCCESS != result)
 			{
-				BX_TRACE("Allocate command buffer error: vkBeginCommandBuffer failed %d: %s.", result, getName(result) );
+				BX_TRACE("Allocate command buffer error: vkBeginCommandBuffer failed {:d}: {}.", result, getName(result) );
 				return result;
 			}
 
@@ -7889,7 +7889,7 @@ VK_DESTROY
 			case VK_OBJECT_TYPE_SWAPCHAIN_KHR:         destroy<VkSwapchainKHR       >(resource.m_handle); break;
 			case VK_OBJECT_TYPE_DEVICE_MEMORY:         destroy<VkDeviceMemory       >(resource.m_handle); break;
 			default:
-				BX_ASSERT(false, "Invalid resource type: %d", resource.m_type);
+				BX_ASSERT(false, "Invalid resource type: {:d}", resource.m_type);
 				break;
 			}
 		}
@@ -7943,7 +7943,7 @@ VK_DESTROY
 
 			BX_ASSERT(
 				  srcSamples == dstSamples
-				, "Mismatching texture sample count (%d != %d)."
+				, "Mismatching texture sample count ({:d} != {:d})."
 				, srcSamples
 				, dstSamples
 				);

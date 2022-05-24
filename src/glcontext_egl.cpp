@@ -113,7 +113,7 @@ EGL_IMPORT
 			BGFX_FATAL(m_surface != EGL_NO_SURFACE, Fatal::UnableToInitialize, "Failed to create surface.");
 
 			m_context = eglCreateContext(m_display, _config, _context, s_contextAttrs);
-			BX_ASSERT(NULL != m_context, "Create swap chain failed: %x", eglGetError() );
+			BX_ASSERT(NULL != m_context, "Create swap chain failed: {:x}", eglGetError() );
 
 			makeCurrent();
 			GL_CHECK(glClearColor(0.0f, 0.0f, 0.0f, 0.0f) );
@@ -186,17 +186,17 @@ EGL_IMPORT
 			EGLint major = 0;
 			EGLint minor = 0;
 			EGLBoolean success = eglInitialize(m_display, &major, &minor);
-			BGFX_FATAL(success && major >= 1 && minor >= 3, Fatal::UnableToInitialize, "Failed to initialize %d.%d", major, minor);
+			BGFX_FATAL(success && major >= 1 && minor >= 3, Fatal::UnableToInitialize, "Failed to initialize {:d}.{:d}", major, minor);
 
 			BX_TRACE("EGL info:");
 			const char* clientApis = eglQueryString(m_display, EGL_CLIENT_APIS);
-			BX_TRACE("   APIs: %s", clientApis); BX_UNUSED(clientApis);
+			BX_TRACE("   APIs: {}", clientApis); BX_UNUSED(clientApis);
 
 			const char* vendor = eglQueryString(m_display, EGL_VENDOR);
-			BX_TRACE(" Vendor: %s", vendor); BX_UNUSED(vendor);
+			BX_TRACE(" Vendor: {}", vendor); BX_UNUSED(vendor);
 
 			const char* version = eglQueryString(m_display, EGL_VERSION);
-			BX_TRACE("Version: %s", version); BX_UNUSED(version);
+			BX_TRACE("Version: {}", version); BX_UNUSED(version);
 
 			const char* extensions = eglQueryString(m_display, EGL_EXTENSIONS);
 			BX_TRACE("Supported EGL extensions:");
@@ -322,7 +322,7 @@ EGL_IMPORT
 					break;
 				}
 
-				BX_TRACE("Failed to create EGL context with EGL_CONTEXT_FLAGS_KHR (%08x).", flags);
+				BX_TRACE("Failed to create EGL context with EGL_CONTEXT_FLAGS_KHR ({:08x}).", flags);
 			}
 
 			BGFX_FATAL(m_context != EGL_NO_CONTEXT, Fatal::UnableToInitialize, "Failed to create context.");
@@ -461,7 +461,7 @@ EGL_IMPORT
 					BX_TRACE("\t%p " #_func " (" #_import ")", _func);                   \
 					BGFX_FATAL(_optional || NULL != _func                                \
 						, Fatal::UnableToInitialize                                      \
-						, "Failed to create OpenGLES context. eglGetProcAddress(\"%s\")" \
+						, "Failed to create OpenGLES context. eglGetProcAddress(\"{}\")" \
 						, #_import);                                                     \
 				}                                                                        \
 			}
@@ -474,7 +474,7 @@ EGL_IMPORT
 					BX_TRACE("\t%p " #_func " (" #_import ")", _func);                   \
 					BGFX_FATAL(_optional || NULL != _func                                \
 						, Fatal::UnableToInitialize                                      \
-						, "Failed to create OpenGLES context. eglGetProcAddress(\"%s\")" \
+						, "Failed to create OpenGLES context. eglGetProcAddress(\"{}\")" \
 						, #_import);                                                     \
 				}                                                                        \
 			}

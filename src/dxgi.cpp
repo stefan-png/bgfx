@@ -195,12 +195,12 @@ namespace bgfx
 					hr = adapter->GetDesc(&desc);
 					if (SUCCEEDED(hr) )
 					{
-						BX_TRACE("Adapter #%d", ii);
+						BX_TRACE("Adapter #{:d}", ii);
 
 						char description[BX_COUNTOF(desc.Description)];
 						wcstombs(description, desc.Description, BX_COUNTOF(desc.Description) );
-						BX_TRACE("\tDescription: %s", description);
-						BX_TRACE("\tVendorId: 0x%08x, DeviceId: 0x%08x, SubSysId: 0x%08x, Revision: 0x%08x"
+						BX_TRACE("\tDescription: {}", description);
+						BX_TRACE("\tVendorId: 0x{:08x}, DeviceId: 0x{:08x}, SubSysId: 0x{:08x}, Revision: 0x{:08x}"
 							, desc.VendorId
 							, desc.DeviceId
 							, desc.SubSysId
@@ -216,7 +216,7 @@ namespace bgfx
 						char sharedSystem[16];
 						bx::prettify(sharedSystem, BX_COUNTOF(sharedSystem), desc.SharedSystemMemory);
 
-						BX_TRACE("\tMemory: %s (video), %s (system), %s (shared)"
+						BX_TRACE("\tMemory: {} (video), {} (system), {} (shared)"
 							, dedicatedVideo
 							, dedicatedSystem
 							, sharedSystem
@@ -259,19 +259,19 @@ namespace bgfx
 					hr = output->GetDesc(&outputDesc);
 					if (SUCCEEDED(hr) )
 					{
-						BX_TRACE("\tOutput #%d", jj);
+						BX_TRACE("\tOutput #{:d}", jj);
 
 						char deviceName[BX_COUNTOF(outputDesc.DeviceName)];
 						wcstombs(deviceName, outputDesc.DeviceName, BX_COUNTOF(outputDesc.DeviceName) );
-						BX_TRACE("\t\t           DeviceName: %s", deviceName);
-						BX_TRACE("\t\t   DesktopCoordinates: %d, %d, %d, %d"
+						BX_TRACE("\t\t           DeviceName: {}", deviceName);
+						BX_TRACE("\t\t   DesktopCoordinates: {:d}, {:d}, {:d}, {:d}"
 							, outputDesc.DesktopCoordinates.left
 							, outputDesc.DesktopCoordinates.top
 							, outputDesc.DesktopCoordinates.right
 							, outputDesc.DesktopCoordinates.bottom
 							);
-						BX_TRACE("\t\t    AttachedToDesktop: %d", outputDesc.AttachedToDesktop);
-						BX_TRACE("\t\t             Rotation: %d", outputDesc.Rotation);
+						BX_TRACE("\t\t    AttachedToDesktop: {:d}", outputDesc.AttachedToDesktop);
+						BX_TRACE("\t\t             Rotation: {:d}", outputDesc.Rotation);
 
 #if BX_PLATFORM_WINDOWS
 						IDXGIOutput6* output6;
@@ -282,18 +282,18 @@ namespace bgfx
 							hr = output6->GetDesc1(&desc);
 							if (SUCCEEDED(hr) )
 							{
-								BX_TRACE("\t\t         BitsPerColor: %d", desc.BitsPerColor);
-								BX_TRACE("\t\t          Color space: %s (colorspace, range, gamma, sitting, primaries, transform)"
+								BX_TRACE("\t\t         BitsPerColor: {:d}", desc.BitsPerColor);
+								BX_TRACE("\t\t          Color space: {} (colorspace, range, gamma, sitting, primaries, transform)"
 									, s_colorSpaceStr[bx::min<uint32_t>(desc.ColorSpace, kDxgiLastColorSpace+1)]
 									);
-								BX_TRACE("\t\t           RedPrimary: %f, %f", desc.RedPrimary[0],   desc.RedPrimary[1]);
-								BX_TRACE("\t\t         GreenPrimary: %f, %f", desc.GreenPrimary[0], desc.GreenPrimary[1]);
-								BX_TRACE("\t\t          BluePrimary: %f, %f", desc.BluePrimary[0],  desc.BluePrimary[1]);
-								BX_TRACE("\t\t           WhitePoint: %f, %f", desc.WhitePoint[0],   desc.WhitePoint[1]);
-								BX_TRACE("\t\t         MinLuminance: %f", desc.MinLuminance);
-								BX_TRACE("\t\t         MaxLuminance: %f", desc.MaxLuminance);
-								BX_TRACE("\t\tMaxFullFrameLuminance: %f", desc.MaxFullFrameLuminance);
-								BX_TRACE("\t\t          HDR support: %s", DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020 == desc.ColorSpace ? "true" : "false");
+								BX_TRACE("\t\t           RedPrimary: {:f}, {:f}", desc.RedPrimary[0],   desc.RedPrimary[1]);
+								BX_TRACE("\t\t         GreenPrimary: {:f}, {:f}", desc.GreenPrimary[0], desc.GreenPrimary[1]);
+								BX_TRACE("\t\t          BluePrimary: {:f}, {:f}", desc.BluePrimary[0],  desc.BluePrimary[1]);
+								BX_TRACE("\t\t           WhitePoint: {:f}, {:f}", desc.WhitePoint[0],   desc.WhitePoint[1]);
+								BX_TRACE("\t\t         MinLuminance: {:f}", desc.MinLuminance);
+								BX_TRACE("\t\t         MaxLuminance: {:f}", desc.MaxLuminance);
+								BX_TRACE("\t\tMaxFullFrameLuminance: {:f}", desc.MaxFullFrameLuminance);
+								BX_TRACE("\t\t          HDR support: {}", DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020 == desc.ColorSpace ? "true" : "false");
 
 								hdr10 |= DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020 == desc.ColorSpace;
 							}
@@ -315,13 +315,13 @@ namespace bgfx
 			if (NULL == m_adapter)
 			{
 				hr = m_factory->EnumAdapters(0, reinterpret_cast<IDXGIAdapter**>(&m_adapter) );
-				BX_WARN(SUCCEEDED(hr), "EnumAdapters failed 0x%08x.", hr);
+				BX_WARN(SUCCEEDED(hr), "EnumAdapters failed 0x{:08x}.", hr);
 				m_driverType = D3D_DRIVER_TYPE_UNKNOWN;
 			}
 
 			bx::memSet(&m_adapterDesc, 0, sizeof(m_adapterDesc) );
 			hr = m_adapter->GetDesc(&m_adapterDesc);
-			BX_WARN(SUCCEEDED(hr), "Adapter GetDesc failed 0x%08x.", hr);
+			BX_WARN(SUCCEEDED(hr), "Adapter GetDesc failed 0x{:08x}.", hr);
 
 			m_adapter->EnumOutputs(0, &m_output);
 
@@ -355,7 +355,7 @@ namespace bgfx
 		for (uint32_t ii = 0; ii < BX_COUNTOF(s_dxgiDeviceIIDs) && FAILED(hr); ++ii)
 		{
 			hr = _device->QueryInterface(s_dxgiDeviceIIDs[ii], (void**)&dxgiDevice);
-			BX_TRACE("DXGI device 11.%d, hr %x", BX_COUNTOF(s_dxgiDeviceIIDs) - 1 - ii, hr);
+			BX_TRACE("DXGI device 11.{:d}, hr {:x}", BX_COUNTOF(s_dxgiDeviceIIDs) - 1 - ii, hr);
 		}
 
 		if (NULL == m_factory)
@@ -364,7 +364,7 @@ namespace bgfx
 
 			bx::memSet(&m_adapterDesc, 0, sizeof(m_adapterDesc) );
 			hr = m_adapter->GetDesc(&m_adapterDesc);
-			BX_WARN(SUCCEEDED(hr), "Adapter GetDesc failed 0x%08x.", hr);
+			BX_WARN(SUCCEEDED(hr), "Adapter GetDesc failed 0x{:08x}.", hr);
 
 			DX_CHECK(m_adapter->GetParent(IID_IDXGIFactory2, (void**)&m_factory) );
 		}
@@ -499,7 +499,7 @@ namespace bgfx
 					if (FAILED(hr) )
 					{
 						DX_RELEASE(swapChainPanelNative, 0);
-						BX_TRACE("Failed to SetSwapChain, hr %x.");
+						BX_TRACE("Failed to SetSwapChain, hr {:x}.");
 						return hr;
 					}
 
@@ -528,7 +528,7 @@ namespace bgfx
 					if (FAILED(hr) )
 					{
 						DX_RELEASE(swapChainBackgroundPanelNative, 0);
-						BX_TRACE("Failed to SetSwapChain, hr %x.");
+						BX_TRACE("Failed to SetSwapChain, hr {:x}.");
 						return hr;
 					}
 
@@ -552,7 +552,7 @@ namespace bgfx
 			{
 				IDXGISwapChain1* swapChain;
 				hr = (*_swapChain)->QueryInterface(s_dxgiSwapChainIIDs[ii], (void**)&swapChain);
-				BX_TRACE("DXGI swap chain %d, hr %x", 4-ii, hr);
+				BX_TRACE("DXGI swap chain {:d}, hr {:x}", 4-ii, hr);
 
 				if (SUCCEEDED(hr) )
 				{
@@ -564,7 +564,7 @@ namespace bgfx
 					{
 						uint32_t colorSpaceSupport;
 						reinterpret_cast<IDXGISwapChain3*>(*_swapChain)->CheckColorSpaceSupport(s_colorSpace[jj], &colorSpaceSupport);
-						BX_TRACE("\t%2d: \"%-20s\", 0x%08x, %s"
+						BX_TRACE("\t{:2d}: \"%-20s\", 0x{:08x}, {}"
 							, s_colorSpace[jj]
 							, s_colorSpaceStr[s_colorSpace[jj]]
 							, colorSpaceSupport
@@ -607,7 +607,7 @@ namespace bgfx
 				if (FAILED(hr))
 				{
 					DX_RELEASE(swapChainPanelNative, 0);
-					BX_TRACE("Failed to SetSwapChain, hr %x.");
+					BX_TRACE("Failed to SetSwapChain, hr {:x}.");
 					return hr;
 				}
 
@@ -637,7 +637,7 @@ namespace bgfx
 				if (FAILED(hr))
 				{
 					DX_RELEASE(swapChainBackgroundPanelNative, 0);
-					BX_TRACE("Failed to SetSwapChain, hr %x.");
+					BX_TRACE("Failed to SetSwapChain, hr {:x}.");
 					return hr;
 				}
 
@@ -679,17 +679,17 @@ namespace bgfx
 						if (SUCCEEDED(hr) )
 						{
 							BX_TRACE("Display specs:");
-							BX_TRACE("\t         BitsPerColor: %d", desc.BitsPerColor);
-							BX_TRACE("\t          Color space: %s (colorspace, range, gamma, sitting, primaries, transform)"
+							BX_TRACE("\t         BitsPerColor: {:d}", desc.BitsPerColor);
+							BX_TRACE("\t          Color space: {} (colorspace, range, gamma, sitting, primaries, transform)"
 								, s_colorSpaceStr[bx::min<uint32_t>(desc.ColorSpace, kDxgiLastColorSpace+1)]
 								);
-							BX_TRACE("\t           RedPrimary: %f, %f", desc.RedPrimary[0],   desc.RedPrimary[1]);
-							BX_TRACE("\t         GreenPrimary: %f, %f", desc.GreenPrimary[0], desc.GreenPrimary[1]);
-							BX_TRACE("\t          BluePrimary: %f, %f", desc.BluePrimary[0],  desc.BluePrimary[1]);
-							BX_TRACE("\t           WhitePoint: %f, %f", desc.WhitePoint[0],   desc.WhitePoint[1]);
-							BX_TRACE("\t         MinLuminance: %f", desc.MinLuminance);
-							BX_TRACE("\t         MaxLuminance: %f", desc.MaxLuminance);
-							BX_TRACE("\tMaxFullFrameLuminance: %f", desc.MaxFullFrameLuminance);
+							BX_TRACE("\t           RedPrimary: {:f}, {:f}", desc.RedPrimary[0],   desc.RedPrimary[1]);
+							BX_TRACE("\t         GreenPrimary: {:f}, {:f}", desc.GreenPrimary[0], desc.GreenPrimary[1]);
+							BX_TRACE("\t          BluePrimary: {:f}, {:f}", desc.BluePrimary[0],  desc.BluePrimary[1]);
+							BX_TRACE("\t           WhitePoint: {:f}, {:f}", desc.WhitePoint[0],   desc.WhitePoint[1]);
+							BX_TRACE("\t         MinLuminance: {:f}", desc.MinLuminance);
+							BX_TRACE("\t         MaxLuminance: {:f}", desc.MaxLuminance);
+							BX_TRACE("\tMaxFullFrameLuminance: {:f}", desc.MaxFullFrameLuminance);
 						}
 
 						DX_RELEASE(output6, 1);

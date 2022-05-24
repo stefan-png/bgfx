@@ -50,7 +50,7 @@ namespace bgfx { namespace gl
 		{
 			wglMakeCurrent(m_hdc, m_context);
 			GLenum err = glGetError();
-			BX_WARN(0 == err, "wglMakeCurrent failed with GL error: 0x%04x.", err); BX_UNUSED(err);
+			BX_WARN(0 == err, "wglMakeCurrent failed with GL error: 0x{:04x}.", err); BX_UNUSED(err);
 		}
 
 		void swapBuffers()
@@ -83,11 +83,11 @@ namespace bgfx { namespace gl
 		DescribePixelFormat(_hdc, pixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
 
 		BX_TRACE("Pixel format:\n"
-			"\tiPixelType %d\n"
-			"\tcColorBits %d\n"
-			"\tcAlphaBits %d\n"
-			"\tcDepthBits %d\n"
-			"\tcStencilBits %d\n"
+			"\tiPixelType {:d}\n"
+			"\tcColorBits {:d}\n"
+			"\tcAlphaBits {:d}\n"
+			"\tcDepthBits {:d}\n"
+			"\tcStencilBits {:d}\n"
 			, pfd.iPixelType
 			, pfd.cColorBits
 			, pfd.cAlphaBits
@@ -227,11 +227,11 @@ namespace bgfx { namespace gl
 				DescribePixelFormat(m_hdc, m_pixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &m_pfd);
 
 				BX_TRACE("Pixel format:\n"
-					"\tiPixelType %d\n"
-					"\tcColorBits %d\n"
-					"\tcAlphaBits %d\n"
-					"\tcDepthBits %d\n"
-					"\tcStencilBits %d\n"
+					"\tiPixelType {:d}\n"
+					"\tcColorBits {:d}\n"
+					"\tcAlphaBits {:d}\n"
+					"\tcDepthBits {:d}\n"
+					"\tcStencilBits {:d}\n"
 					, m_pfd.iPixelType
 					, m_pfd.cColorBits
 					, m_pfd.cAlphaBits
@@ -243,7 +243,7 @@ namespace bgfx { namespace gl
 				// When window is created by SDL and SDL_WINDOW_OPENGL is set, SetPixelFormat
 				// will fail. Just warn and continue. In case it failed for some other reason
 				// create context will fail and it will error out there.
-				BX_WARN(result, "SetPixelFormat failed (last err: 0x%08x)!", GetLastError() );
+				BX_WARN(result, "SetPixelFormat failed (last err: 0x{:08x})!", GetLastError() );
 
 				int32_t flags = BGFX_CONFIG_DEBUG ? WGL_CONTEXT_DEBUG_BIT_ARB : 0;
 				BX_UNUSED(flags);
@@ -270,7 +270,7 @@ namespace bgfx { namespace gl
 					contextAttrs[6] = WGL_CONTEXT_PROFILE_MASK_ARB == contextAttrs[6] ? 0 : contextAttrs[6];
 					m_context = wglCreateContextAttribsARB(m_hdc, 0, contextAttrs);
 				}
-				BGFX_FATAL(NULL != m_context, Fatal::UnableToInitialize, "Failed to create context 0x%08x.", GetLastError() );
+				BGFX_FATAL(NULL != m_context, Fatal::UnableToInitialize, "Failed to create context 0x{:08x}.", GetLastError() );
 
 				BX_STATIC_ASSERT(sizeof(contextAttrs) == sizeof(m_contextAttrs) );
 				bx::memCopy(m_contextAttrs, contextAttrs, sizeof(contextAttrs) );
@@ -340,10 +340,10 @@ namespace bgfx { namespace gl
 		SwapChainGL* swapChain = BX_NEW(g_allocator, SwapChainGL)(_nwh);
 
 		int result = SetPixelFormat(swapChain->m_hdc, m_pixelFormat, &m_pfd);
-		BX_WARN(result, "SetPixelFormat failed (last err: 0x%08x)!", GetLastError() ); BX_UNUSED(result);
+		BX_WARN(result, "SetPixelFormat failed (last err: 0x{:08x})!", GetLastError() ); BX_UNUSED(result);
 
 		swapChain->m_context = wglCreateContextAttribsARB(swapChain->m_hdc, m_context, m_contextAttrs);
-		BX_ASSERT(NULL != swapChain->m_context, "Create swap chain failed: %x", glGetError() );
+		BX_ASSERT(NULL != swapChain->m_context, "Create swap chain failed: {:x}", glGetError() );
 		return swapChain;
 	}
 
@@ -380,7 +380,7 @@ namespace bgfx { namespace gl
 			{
 				wglMakeCurrent(m_hdc, m_context);
 				GLenum err = glGetError();
-				BX_WARN(0 == err, "wglMakeCurrent failed with GL error: 0x%04x.", err); BX_UNUSED(err);
+				BX_WARN(0 == err, "wglMakeCurrent failed with GL error: 0x{:04x}.", err); BX_UNUSED(err);
 			}
 			else
 			{
@@ -409,7 +409,7 @@ namespace bgfx { namespace gl
 				}                                                                              \
 				BGFX_FATAL(BX_IGNORE_C4127(_optional) || NULL != _func                         \
 					, Fatal::UnableToInitialize                                                \
-					, "Failed to create OpenGL context. wglGetProcAddress(\"%s\")", #_import); \
+					, "Failed to create OpenGL context. wglGetProcAddress(\"{}\")", #_import); \
 			}                                                                                  \
 		}
 

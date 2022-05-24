@@ -55,7 +55,7 @@ namespace bgfx { namespace gl
 			GLint height;
 			GL_CHECK(glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width) );
 			GL_CHECK(glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height) );
-			BX_TRACE("Screen size: %d x %d", width, height);
+			BX_TRACE("Screen size: {:d} x {:d}", width, height);
 
 			m_width = width;
 			m_height = height;
@@ -102,7 +102,7 @@ namespace bgfx { namespace gl
 			GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthStencilRbo) );
 
 			GLenum err = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			BX_ASSERT(GL_FRAMEBUFFER_COMPLETE == err, "glCheckFramebufferStatus failed 0x%08x", err);
+			BX_ASSERT(GL_FRAMEBUFFER_COMPLETE == err, "glCheckFramebufferStatus failed 0x{:08x}", err);
 			BX_UNUSED(err);
 
 			makeCurrent();
@@ -204,7 +204,7 @@ namespace bgfx { namespace gl
 		GLint height;
 		GL_CHECK(glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width) );
 		GL_CHECK(glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height) );
-		BX_TRACE("Screen size: %d x %d", width, height);
+		BX_TRACE("Screen size: {:d} x {:d}", width, height);
 
 		GL_CHECK(glGenRenderbuffers(1, &m_depthStencilRbo) );
 		GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, m_depthStencilRbo) );
@@ -213,7 +213,7 @@ namespace bgfx { namespace gl
 		GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthStencilRbo) );
 
 		BX_ASSERT(GL_FRAMEBUFFER_COMPLETE ==  glCheckFramebufferStatus(GL_FRAMEBUFFER)
-			, "glCheckFramebufferStatus failed 0x%08x"
+			, "glCheckFramebufferStatus failed 0x{:08x}"
 			, glCheckFramebufferStatus(GL_FRAMEBUFFER)
 			);
 
@@ -290,7 +290,7 @@ namespace bgfx { namespace gl
 		GLint height;
 		GL_CHECK(glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &width) );
 		GL_CHECK(glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &height) );
-		BX_TRACE("Screen size: %d x %d", width, height);
+		BX_TRACE("Screen size: {:d} x {:d}", width, height);
 
 		GL_CHECK(glGenRenderbuffers(1, &m_depthStencilRbo) );
 		GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, m_depthStencilRbo) );
@@ -299,7 +299,7 @@ namespace bgfx { namespace gl
 		GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthStencilRbo) );
 
 		BX_ASSERT(GL_FRAMEBUFFER_COMPLETE ==  glCheckFramebufferStatus(GL_FRAMEBUFFER)
-			, "glCheckFramebufferStatus failed 0x%08x"
+			, "glCheckFramebufferStatus failed 0x{:08x}"
 			, glCheckFramebufferStatus(GL_FRAMEBUFFER)
 			);
 	}
@@ -364,7 +364,7 @@ namespace bgfx { namespace gl
 				BX_TRACE("%p " #_func " (" #_import ")", _func);                  \
 			}                                                                     \
 			BGFX_FATAL(_optional || NULL != _func, Fatal::UnableToInitialize      \
-				, "Failed to create OpenGLES context. EAGLGetProcAddress(\"%s\")" \
+				, "Failed to create OpenGLES context. EAGLGetProcAddress(\"{}\")" \
 				, #_import);                                                      \
 		}
 #	include "glimports.h"

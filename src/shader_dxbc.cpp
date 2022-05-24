@@ -468,7 +468,7 @@ namespace bgfx
 
 	const char* getName(DxbcOpcode::Enum _opcode)
 	{
-		BX_ASSERT(_opcode < DxbcOpcode::Count, "Unknown opcode id %d.", _opcode);
+		BX_ASSERT(_opcode < DxbcOpcode::Count, "Unknown opcode id {:d}.", _opcode);
 		return s_dxbcOpcode[_opcode];
 	}
 
@@ -888,7 +888,7 @@ namespace bgfx
 			break;
 
 		default:
-			BX_ASSERT(false, "sub operand addressing mode %d", _subOperand.addrMode);
+			BX_ASSERT(false, "sub operand addressing mode {:d}", _subOperand.addrMode);
 			break;
 		}
 
@@ -941,7 +941,7 @@ namespace bgfx
 			break;
 
 		default:
-			BX_ASSERT(false, "sub operand addressing mode %d", _subOperand.addrMode);
+			BX_ASSERT(false, "sub operand addressing mode {:d}", _subOperand.addrMode);
 			break;
 		}
 
@@ -1030,7 +1030,7 @@ namespace bgfx
 				break;
 
 			default:
-				BX_ASSERT(false, "operand %d addressing mode %d", ii, _operand.addrMode[ii]);
+				BX_ASSERT(false, "operand {:d} addressing mode {:d}", ii, _operand.addrMode[ii]);
 				break;
 			}
 		}
@@ -1105,7 +1105,7 @@ namespace bgfx
 				break;
 
 			default:
-				BX_ASSERT(false, "operand %d addressing mode %d", ii, _operand.addrMode[ii]);
+				BX_ASSERT(false, "operand {:d} addressing mode {:d}", ii, _operand.addrMode[ii]);
 				break;
 			}
 		}
@@ -1409,7 +1409,7 @@ namespace bgfx
 			break;
 
 		default:
-			BX_ASSERT(false, "Instruction %s with invalid number of operands %d (numValues %d)."
+			BX_ASSERT(false, "Instruction {} with invalid number of operands {:d} (numValues {:d})."
 					, getName(_instruction.opcode)
 					, info.numOperands
 					, info.numValues
@@ -2043,7 +2043,7 @@ namespace bgfx
 
 			default:
 				size += chunkSize;
-				BX_ASSERT(false, "UNKNOWN FOURCC %c%c%c%c %d"
+				BX_ASSERT(false, "UNKNOWN FOURCC {:c}{:c}{:c}{:c} {:d}"
 					, ( (char*)&fourcc)[0]
 					, ( (char*)&fourcc)[1]
 					, ( (char*)&fourcc)[2]
@@ -2176,7 +2176,7 @@ namespace bgfx
 			case BX_MAKEFOURCC('X', 'N', 'A', 'P'): // ?
 			case BX_MAKEFOURCC('X', 'N', 'A', 'S'): // ?
 			default:
-				BX_ASSERT(false, "Writing of DXBC %c%c%c%c chunk unsupported"
+				BX_ASSERT(false, "Writing of DXBC {:c}{:c}{:c}{:c} chunk unsupported"
 					, ( (char*)&_dxbc.chunksFourcc[ii])[0]
 					, ( (char*)&_dxbc.chunksFourcc[ii])[1]
 					, ( (char*)&_dxbc.chunksFourcc[ii])[2]
@@ -2215,7 +2215,7 @@ namespace bgfx
 		{
 			DxbcInstruction instruction;
 			uint32_t size = read(&reader, instruction, _err);
-			BX_ASSERT(size/4 == instruction.length, "read %d, expected %d", size/4, instruction.length); BX_UNUSED(size);
+			BX_ASSERT(size/4 == instruction.length, "read {:d}, expected {:d}", size/4, instruction.length); BX_UNUSED(size);
 
 			bool cont = _fn(token * sizeof(uint32_t), instruction, _userData);
 			if (!cont)
@@ -2242,7 +2242,7 @@ namespace bgfx
 		{
 			DxbcInstruction instruction;
 			uint32_t size = read(&reader, instruction, _err);
-			BX_ASSERT(size/4 == instruction.length, "read %d, expected %d", size/4, instruction.length); BX_UNUSED(size);
+			BX_ASSERT(size/4 == instruction.length, "read {:d}, expected {:d}", size/4, instruction.length); BX_UNUSED(size);
 
 			_fn(instruction, _userData);
 

@@ -765,16 +765,16 @@ namespace bgfx { namespace d3d11
 					{
 						AGSDriverVersionInfo vi;
 						result = agsGetDriverVersionInfo(m_ags, &vi);
-						BX_TRACE("      Driver version: %s", vi.strDriverVersion);
-						BX_TRACE("    Catalyst version: %s", vi.strCatalystVersion);
+						BX_TRACE("      Driver version: {}", vi.strDriverVersion);
+						BX_TRACE("    Catalyst version: {}", vi.strCatalystVersion);
 
 						int32_t numCrossfireGPUs = 0;
 						result = agsGetCrossfireGPUCount(m_ags, &numCrossfireGPUs);
-						BX_TRACE("  Num crossfire GPUs: %d", numCrossfireGPUs);
+						BX_TRACE("  Num crossfire GPUs: {:d}", numCrossfireGPUs);
 
 						int32_t numGPUs = 0;
 						result = agsGetTotalGPUCount(m_ags, &numGPUs);
-						BX_TRACE("            Num GPUs: %d", numGPUs);
+						BX_TRACE("            Num GPUs: {:d}", numGPUs);
 
 						for (int32_t ii = 0; ii < numGPUs; ++ii)
 						{
@@ -784,7 +784,7 @@ namespace bgfx { namespace d3d11
 							{
 								char memSizeStr[16];
 								bx::prettify(memSizeStr, BX_COUNTOF(memSizeStr), memSize);
-								BX_TRACE("     GPU #%d mem size: %s", ii, memSizeStr);
+								BX_TRACE("     GPU #{:d} mem size: {}", ii, memSizeStr);
 							}
 						}
 					}
@@ -909,7 +909,7 @@ namespace bgfx { namespace d3d11
 							, &m_featureLevel
 							, &m_deviceCtx
 							);
-						BX_WARN(FAILED(hr), "Direct3D11 device feature level %d.%d."
+						BX_WARN(FAILED(hr), "Direct3D11 device feature level {:d}.{:d}."
 							, (m_featureLevel >> 12) & 0xf
 							, (m_featureLevel >>  8) & 0xf
 							);
@@ -1053,7 +1053,7 @@ namespace bgfx { namespace d3d11
 						if (FAILED(hr) )
 						{
 							BX_TRACE(
-								  "CreateSwapChain with DXGI_SWAP_EFFECT(%d) failed with HRESULT(%x)"
+								  "CreateSwapChain with DXGI_SWAP_EFFECT({:d}) failed with HRESULT({:x})"
 								, m_scd.swapEffect
 								, hr
 								);
@@ -1417,7 +1417,7 @@ namespace bgfx { namespace d3d11
 							else
 							{
 								BX_TRACE(
-									  "CheckFeatureSupport failed with HRESULT(%x) for format %s."
+									  "CheckFeatureSupport failed with HRESULT({:x}) for format {}."
 									, hr
 									, getName(TextureFormat::Enum(ii) )
 									);
@@ -1505,7 +1505,7 @@ namespace bgfx { namespace d3d11
 							else
 							{
 								BX_TRACE(
-									  "CheckFeatureSupport failed with HRESULT(%x) for sRGB format %s."
+									  "CheckFeatureSupport failed with HRESULT({:x}) for sRGB format {}."
 									, hr
 									, getName(TextureFormat::Enum(ii) )
 									);
@@ -1963,7 +1963,7 @@ namespace bgfx { namespace d3d11
 
 			if (NULL == swapChain)
 			{
-				BX_TRACE("Unable to capture screenshot %s.", _filePath);
+				BX_TRACE("Unable to capture screenshot {}.", _filePath);
 				return;
 			}
 
@@ -2088,7 +2088,7 @@ namespace bgfx { namespace d3d11
 				break;
 
 			default:
-				BX_ASSERT(false, "Invalid handle type?! %d", _handle.type);
+				BX_ASSERT(false, "Invalid handle type?! {:d}", _handle.type);
 				break;
 			}
 		}
@@ -2311,7 +2311,7 @@ namespace bgfx { namespace d3d11
 				BGFX_FATAL(
 					  !m_lost
 					, bgfx::Fatal::DeviceLost
-					, "Device is lost. FAILED HRESULT(%x) %s (%s)"
+					, "Device is lost. FAILED HRESULT({:x}) {} ({})"
 					, hr
 					, getLostReason(hr)
 					, DXGI_ERROR_DEVICE_REMOVED == hr ? getLostReason(m_device->GetDeviceRemovedReason() ) : "no info"
@@ -3419,7 +3419,7 @@ namespace bgfx { namespace d3d11
 					break;
 
 				default:
-					BX_TRACE("%4d: INVALID 0x%08x, t %d, l %d, n %d, c %d", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
+					BX_TRACE("%4d: INVALID 0x{:08x}, t {:d}, l {:d}, n {:d}, c {:d}", _uniformBuffer.getPos(), opcode, type, loc, num, copy);
 					break;
 				}
 			}
@@ -4107,7 +4107,7 @@ namespace bgfx { namespace d3d11
 		m_numPredefined = 0;
 		m_numUniforms = count;
 
-		BX_TRACE("%s Shader consts %d"
+		BX_TRACE("{} Shader consts {:d}"
 			, getShaderTypeName(magic)
 			, count
 			);
@@ -4163,7 +4163,7 @@ namespace bgfx { namespace d3d11
 				else if (0 == (kUniformSamplerBit & type) )
 				{
 					const UniformRegInfo* info = s_renderD3D11->m_uniformReg.find(name);
-					BX_WARN(NULL != info, "User defined uniform '%s' is not found, it won't be set.", name);
+					BX_WARN(NULL != info, "User defined uniform '{}' is not found, it won't be set.", name);
 
 					if (NULL != info)
 					{
@@ -4181,7 +4181,7 @@ namespace bgfx { namespace d3d11
 					kind = "sampler";
 				}
 
-				BX_TRACE("\t%s: %s (%s), num %2d, r.index %3d, r.count %2d"
+				BX_TRACE("\t{}: {} ({}), num {:2d}, r.index {:3d}, r.count {:2d}"
 					, kind
 					, name
 					, getUniformTypeName(UniformType::Enum(type&~kUniformMask) )
@@ -4282,7 +4282,7 @@ namespace bgfx { namespace d3d11
 			desc.StructureByteStride = 0;
 			DX_CHECK(s_renderD3D11->m_device->CreateBuffer(&desc, NULL, &m_buffer) );
 
-			BX_TRACE("\tCB size: %d", desc.ByteWidth);
+			BX_TRACE("\tCB size: {:d}", desc.ByteWidth);
 		}
 
 		if (NULL != temp)
@@ -4410,7 +4410,7 @@ namespace bgfx { namespace d3d11
 			const bool compressed = bimg::isCompressed(bimg::TextureFormat::Enum(m_textureFormat) );
 			const bool swizzle    = TextureFormat::BGRA8 == m_textureFormat && 0 != (m_flags&BGFX_TEXTURE_COMPUTE_WRITE);
 
-			BX_TRACE("Texture %3d: %s (requested: %s), layers %d, %dx%d%s%s%s."
+			BX_TRACE("Texture {:3d}: {} (requested: {}), layers {:d}, %dx{:d}{}{}{}."
 				, getHandle()
 				, getName( (TextureFormat::Enum)m_textureFormat)
 				, getName( (TextureFormat::Enum)m_requestedFormat)
@@ -4488,7 +4488,7 @@ namespace bgfx { namespace d3d11
 			{
 				format      = s_textureFormat[m_textureFormat].m_fmtSrgb;
 				srvd.Format = format;
-				BX_WARN(format != DXGI_FORMAT_UNKNOWN, "sRGB not supported for texture format %d", m_textureFormat);
+				BX_WARN(format != DXGI_FORMAT_UNKNOWN, "sRGB not supported for texture format {:d}", m_textureFormat);
 			}
 
 			if (format == DXGI_FORMAT_UNKNOWN)

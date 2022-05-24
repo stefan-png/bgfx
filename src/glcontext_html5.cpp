@@ -81,7 +81,7 @@ namespace bgfx { namespace gl
 			}
 			else
 			{
-				BX_TRACE("Invalid WebGL context. (Canvas handle: '%s', context handle: %d)", canvas, context);
+				BX_TRACE("Invalid WebGL context. (Canvas handle: '{}', context handle: {:d})", canvas, context);
 			}
 		}
 		else
@@ -157,7 +157,7 @@ namespace bgfx { namespace gl
 			error = (int) context;
 		}
 
-		BX_TRACE("Failed to create WebGL context. (Canvas handle: '%s', last attempt error %d)", canvas, error);
+		BX_TRACE("Failed to create WebGL context. (Canvas handle: '{}', last attempt error {:d})", canvas, error);
 		return NULL;
 	}
 
@@ -218,7 +218,7 @@ namespace bgfx { namespace gl
 			_func = getProcAddress<_proto>(_webGLVersion, #_import);                \
 			BX_TRACE("\t%p " #_func " (" #_import ")", _func);                      \
 			BGFX_FATAL(_optional || NULL != _func, Fatal::UnableToInitialize        \
-				, "Failed to create WebGL/OpenGLES context. GetProcAddress(\"%s\")" \
+				, "Failed to create WebGL/OpenGLES context. GetProcAddress(\"{}\")" \
 				, #_import                                                          \
 				);                                                                  \
 		}                                                                           \
